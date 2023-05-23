@@ -1,4 +1,12 @@
-import { REGEX_DECIMAL } from "./const"
+import { ExerciseType } from "../types"
+import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore"
+import { RootState } from "../store"
+
+let store: ToolkitStore
+
+export const injectStore = (_store: ToolkitStore): void => {
+  store = _store
+}
 
 export const classNames = (...classes: string[]): string => {
   return classes.filter(Boolean).join(" ")
@@ -22,6 +30,28 @@ export const arrayMove = <T>(
 }
 
 export const isNumber = (value: unknown): value is number => {
-  return typeof value === 'number';
-};
+  return typeof value === "number"
+}
 
+export const getWeight = (
+  exerciseType: ExerciseType,
+  bodyweightFactor: number,
+  setWeight: number
+) => {
+  const state: RootState = store.getState()
+  const user = state.user!
+  const bw = user.measurements.bodyweight * bodyweightFactor
+
+  switch (exerciseType) {
+    case ExerciseType.repsAndKg:
+      return setWeight
+    case ExerciseType.repsAndBw:
+      return bw
+    case ExerciseType.repsAndMinusKg:
+      return bw - setWeight
+    case ExerciseType.repsAndPlusKg:
+      return bw + setWeight
+    default:
+      return setWeight
+  }
+}

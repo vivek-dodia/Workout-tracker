@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "../hooks"
 import { Link, useLocation } from "react-router-dom"
-import { selectUser } from "../selectors/userSelectors"
 import { selectWorkoutsByQuery } from "../selectors/workoutSelectors"
 import { setHeaderTitle } from "../reducers/headerTitleReducer"
 import Page from "../components/Layout/Page"
@@ -12,7 +11,6 @@ import { format, parseISO } from "date-fns"
 const Workouts = () => {
   const dispatch = useAppDispatch()
   const location = useLocation()
-  const user = useAppSelector(selectUser)
   const [searchQuery, setSearchQuery] = useState<string>("")
 
   const workouts = useAppSelector((state) =>
@@ -49,7 +47,7 @@ const Workouts = () => {
                   </p>
                   <div className="mt-1 flex gap-4 items-center">
                     <p className="text-sm text-gray-500 group-hover:text-gray-600">
-                      {format(parseISO(workout.date), "dd.MM.yy")}
+                      {format(parseISO(workout.date), "PPPP")}
                     </p>
                   </div>
                 </div>
@@ -88,7 +86,7 @@ const Workouts = () => {
                       {workout.exercises
                         .map((exercise) => exercise.sets)
                         .flat()
-                        .map((set) => set.reps * set.weight)
+                        .map((set) => set.reps * set.actualWeight)
                         .reduce((a, b) => a + b, 0)}{" "}
                       kg
                     </p>

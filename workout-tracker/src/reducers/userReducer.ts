@@ -1,6 +1,7 @@
 import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit"
 import storageService from "../services/storage"
 import signInService from "../services/signIn"
+import userService from "../services/users"
 
 import { Credentials, User } from "../types"
 
@@ -44,6 +45,14 @@ export const signOut = () => {
   return async (dispatch: Dispatch): Promise<void> => {
     storageService.removeUser()
     dispatch(removeUser())
+  }
+}
+
+export const updateUser = (userToUpdate: User) => {
+  return async (dispatch: Dispatch): Promise<void> => {
+    const newUser = await userService.update(userToUpdate.id, userToUpdate)
+    storageService.saveUser(newUser)
+    dispatch(setUser(newUser))
   }
 }
 

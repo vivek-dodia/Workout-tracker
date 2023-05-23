@@ -8,21 +8,23 @@ export type Notification = {
   type: string
 }
 
+export interface Measurements {
+  bodyweight: number
+}
+
 export interface User {
   id: string
   token: string
   username: string
   email: string
+  measurements: Measurements
 }
 
 export enum ExerciseType {
   repsAndKg = "Reps&Kg",
-  bwReps = "Reps",
-  weightedBw = "Reps&+Kg",
-  assistedBw = "Reps&-Kg",
-  duration = "Time",
-  distanceAndDuration = "Time&Km",
-  weightAndDistance = "Kg&Km",
+  repsAndBw = "Reps&Bw",
+  repsAndPlusKg = "Reps&+Kg",
+  repsAndMinusKg = "Reps&-Kg",
 }
 
 export enum Equipment {
@@ -59,6 +61,7 @@ export interface Exercise {
   muscleGroups: MuscleGroup[]
   equipment: Equipment
   type: ExerciseType
+  bodyweightFactor: number
 }
 
 export enum SetType {
@@ -77,6 +80,14 @@ export interface Set {
   type: SetType
   reps: number
   weight: number
+  actualWeight: number
+}
+
+export interface SetWithData extends Set {
+  exerciseId: string
+  date: string
+  setIndex: number
+  actualWeight: number
 }
 
 export interface FormSet {
@@ -100,14 +111,14 @@ export interface FormWorkoutExercise extends BaseWorkoutExercise {
 }
 
 export interface BaseWorkout {
-  id: string
   name: string
-  user: string
   notes: string
   date: string
 }
 
 export interface Workout extends BaseWorkout {
+  id: string
+  user: string
   duration: number
   exercises: WorkoutExercise[]
 }

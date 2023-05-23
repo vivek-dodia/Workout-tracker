@@ -13,6 +13,9 @@ import {
 import {
   ChevronRightIcon,
   ArrowRightIcon,
+  PencilSquareIcon,
+  DocumentDuplicateIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline"
 
 import Page from "../components/Layout/Page"
@@ -31,6 +34,7 @@ import DeleteOption from "../components/Dropdown/DeleteOption"
 import DuplicateOption from "../components/Dropdown/DuplicateOption"
 import EditOption from "../components/Dropdown/EditOption"
 import DropdownSection from "../components/Dropdown/DropdownSection"
+import Button from "../components/Button"
 
 const Details = ({ exercise }: { exercise: Exercise }) => {
   const dispatch = useAppDispatch()
@@ -49,30 +53,74 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
           <div>
             <GoBackButton to="/app/exercises">Exercises</GoBackButton>
           </div>
-          <div>
-            <Dropdown>
-              <DropdownSection>
-                {isCustomExercise && (
-                  <EditOption
+          <div className="flex items-center gap-4">
+            <div className="hidden lg:flex gap-2">
+              {isCustomExercise && (
+                <Button
+                  variant="secondary"
+                  onClick={() =>
+                    navigate(`/app/exercises/update/${exercise.id}`)
+                  }
+                >
+                  <div className="flex">
+                    <PencilSquareIcon className="mr-2 h-5 w-5" />
+                    <h3>Edit exercise</h3>
+                  </div>
+                </Button>
+              )}
+
+              <Button
+                variant="secondary"
+                onClick={() =>
+                  navigate(`/app/exercises/duplicate/${exercise.id}`)
+                }
+              >
+                <div className="flex">
+                  <DocumentDuplicateIcon className="mr-2 h-5 w-5" />
+                  <h3>Duplicate exercise</h3>
+                </div>
+              </Button>
+
+              {isCustomExercise && (
+                <Button
+                  variant="alert"
+                  onClick={() => dispatch(removeExercise(exercise.id))}
+                >
+                  <div className="flex">
+                    <TrashIcon className="mr-2 h-5 w-5" />
+                    <h3>Delete exercise</h3>
+                  </div>
+                </Button>
+              )}
+            </div>
+            <div className="block lg:hidden">
+              <Dropdown>
+                <DropdownSection>
+                  {isCustomExercise && (
+                    <EditOption
+                      title="Edit Exercise"
+                      onClick={() =>
+                        navigate(`/app/exercises/update/${exercise.id}`)
+                      }
+                    />
+                  )}
+                  <DuplicateOption
+                    title="Duplicate Exercise"
                     onClick={() =>
-                      navigate(`/app/exercises/update/${exercise.id}`)
+                      navigate(`/app/exercises/duplicate/${exercise.id}`)
                     }
                   />
-                )}
-                <DuplicateOption
-                  onClick={() =>
-                    navigate(`/app/exercises/duplicate/${exercise.id}`)
-                  }
-                />
-              </DropdownSection>
-              {isCustomExercise && (
-                <DropdownSection>
-                  <DeleteOption
-                    onClick={() => dispatch(removeExercise(exercise.id))}
-                  />
                 </DropdownSection>
-              )}
-            </Dropdown>
+                {isCustomExercise && (
+                  <DropdownSection>
+                    <DeleteOption
+                      title="Delete Exercise"
+                      onClick={() => dispatch(removeExercise(exercise.id))}
+                    />
+                  </DropdownSection>
+                )}
+              </Dropdown>
+            </div>
           </div>
         </div>
       </Page.Header>

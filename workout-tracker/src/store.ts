@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit"
-import { injectStore } from "./axios"
-
+import { injectStore as injectStoreForAxios } from "./axios"
+import { injectStore as injectStoreForFns } from "./utils/fn"
 import userReducer from "./reducers/userReducer"
 import notificationReducer from "./reducers/notificationReducer"
 import sidebarReducer from "./reducers/sidebarReducer"
@@ -23,7 +23,8 @@ const store = configureStore({
   })
 })
 
-injectStore(store)
+injectStoreForAxios(store)
+injectStoreForFns(store)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

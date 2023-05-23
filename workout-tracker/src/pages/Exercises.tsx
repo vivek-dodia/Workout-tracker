@@ -22,7 +22,7 @@ export const CustomChip = () => {
   return (
     <div className="border px-1 py-0.5 rounded-md bg-blue-100">
       <div>
-        <p className="text-sm text-blue-600">Custom</p>
+        <p className="text-xs text-blue-600">Custom</p>
       </div>
     </div>
   )
@@ -46,7 +46,7 @@ export const ExerciseListItem = ({
         <div
           className={classNames(
             "relative inline-flex items-center justify-center w-12 h-12 overflow-hidden group-hover:bg-blue-500 rounded-full dark:bg-gray-600",
-            isSelected ? "bg-blue-500" : "bg:gray-100"
+            isSelected ? "bg-blue-500" : "bg-gray-100"
           )}
         >
           <span
@@ -91,6 +91,12 @@ type Props = {
     selectExercises?: () => void
     toggleSelected: (exercise: Exercise) => void
     isSelected: (exercise: Exercise) => boolean
+    replaceExercise: (exerciseIndex: number, exercise: Exercise) => void
+    setReplacingExercise: Dispatch<{ active: boolean; exerciseIndex: number }>
+    replacingExercise: {
+      active: boolean
+      exerciseIndex: number
+    }
     selectedCount: number
   }
 }
@@ -114,7 +120,9 @@ const Exercises = ({ asPicker }: Props) => {
 
   const CustomExercises = () => (
     <>
-      <label className="text-gray-500 text-sm">Custom Exercises</label>
+      <label className="text-gray-500 text-sm">
+        Custom Exercises ({customExercises.length})
+      </label>
       <ul className="mt-1 divide-y divide-gray-200">
         {customExercises.map((exercise) => {
           if (asPicker) {
@@ -122,7 +130,14 @@ const Exercises = ({ asPicker }: Props) => {
               <div
                 key={exercise.id}
                 className="flex justify-between gap-x-6 py-5 group items-center cursor-pointer"
-                onClick={() => asPicker.toggleSelected(exercise)}
+                onClick={() => {
+                  asPicker.replacingExercise.active
+                    ? asPicker.replaceExercise(
+                        asPicker.replacingExercise.exerciseIndex,
+                        exercise
+                      )
+                    : asPicker.toggleSelected(exercise)
+                }}
               >
                 <ExerciseListItem
                   picking
@@ -148,7 +163,9 @@ const Exercises = ({ asPicker }: Props) => {
 
   const AllExercises = () => (
     <>
-      <label className="text-gray-500 text-sm">All Exercises</label>
+      <label className="text-gray-500 text-sm">
+        All Exercises ({exercises.length})
+      </label>
       <ul className="mt-1 divide-y divide-gray-200">
         {exercises.map((exercise) => {
           if (asPicker) {
@@ -156,7 +173,14 @@ const Exercises = ({ asPicker }: Props) => {
               <div
                 key={exercise.id}
                 className="flex justify-between gap-x-6 py-5 group items-center cursor-pointer"
-                onClick={() => asPicker.toggleSelected(exercise)}
+                onClick={() => {
+                  asPicker.replacingExercise.active
+                    ? asPicker.replaceExercise(
+                        asPicker.replacingExercise.exerciseIndex,
+                        exercise
+                      )
+                    : asPicker.toggleSelected(exercise)
+                }}
               >
                 <ExerciseListItem
                   picking
@@ -195,14 +219,26 @@ const Exercises = ({ asPicker }: Props) => {
               <div className="flex justify-between">
                 <button
                   className="flex gap-2 items-center"
-                  onClick={() => asPicker.setSelectingExercises(false)}
+                  onClick={() => {
+                    asPicker.replacingExercise.active
+                      ? asPicker.setReplacingExercise({
+                          active: false,
+                          exerciseIndex: -1,
+                        })
+                      : asPicker.setSelectingExercises(false)
+                  }}
                 >
                   <ArrowLeftIcon className="h-5 w-5" />
                   <h4 className="font-semibold text-gray-600">Workout</h4>
                 </button>
-                <Button variant="secondary" onClick={asPicker.selectExercises}>
-                  {`Add selected exercises (${asPicker.selectedCount})`}
-                </Button>
+                {!asPicker.replacingExercise.active && (
+                  <Button
+                    variant="secondary"
+                    onClick={asPicker.selectExercises}
+                  >
+                    {`Add selected exercises (${asPicker.selectedCount})`}
+                  </Button>
+                )}
               </div>
             )}
             <div className="grid grid-cols-9 gap-4 items-center">

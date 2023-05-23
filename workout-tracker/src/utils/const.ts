@@ -7,7 +7,7 @@ export const EMPTY_SET: FormSet = {
   weight: "",
 }
 
-export const EMPTY_WORKOUT: Omit<FormWorkout, "id" | "user"> = {
+export const EMPTY_WORKOUT: FormWorkout = {
   name: "",
   notes: "",
   date: new Date().toISOString(),
@@ -16,3 +16,4 @@ export const EMPTY_WORKOUT: Omit<FormWorkout, "id" | "user"> = {
 }
 
 export const REGEX_DECIMAL = /^-?\d+\.?\d*$/
+export const REGEX_INT = /^(?!0{2,})\d+$/
