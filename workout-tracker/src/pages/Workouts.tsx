@@ -7,6 +7,7 @@ import Page from "../components/Layout/Page"
 import SearchBar from "../components/SearchBar"
 import { ChevronRightIcon } from "@heroicons/react/24/outline"
 import { format, parseISO } from "date-fns"
+import { useInView } from "react-intersection-observer"
 
 const Workouts = () => {
   const dispatch = useAppDispatch()
@@ -16,6 +17,17 @@ const Workouts = () => {
   const workouts = useAppSelector((state) =>
     selectWorkoutsByQuery(state, searchQuery)
   )
+
+  const [page, setPage] = useState(1)
+  const pageIncrease = 25
+  const { ref } = useInView({
+    threshold: 0.1,
+    onChange: (inView) => {
+      if (inView) {
+        setPage(page + 1)
+      }
+    },
+  })
 
   useEffect(() => {
     dispatch(setHeaderTitle("Workouts"))
@@ -27,7 +39,7 @@ const Workouts = () => {
         Workouts ({workouts.length})
       </label>
       <ul className="mt-1 divide-y divide-gray-200">
-        {workouts.map((workout) => (
+        {workouts.slice(0, page * pageIncrease).map((workout) => (
           <Link
             key={workout.id}
             to={`/app/workouts/${workout.id}`}
@@ -130,6 +142,7 @@ const Workouts = () => {
 
       <Page.Content>
         {!!workouts.length ? <AllWorkouts /> : <NoWorkouts />}
+        <div ref={ref}></div>
       </Page.Content>
     </Page>
   )

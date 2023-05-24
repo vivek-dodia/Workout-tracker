@@ -17,6 +17,7 @@ import { selectUser } from "../selectors/userSelectors"
 import { Exercise, FormWorkoutExercise } from "../types"
 import { classNames } from "../utils/fn"
 import Button from "../components/Button"
+import { useInView } from "react-intersection-observer"
 
 export const CustomChip = () => {
   return (
@@ -114,6 +115,17 @@ const Exercises = ({ asPicker }: Props) => {
     (exercise) => exercise.user === user?.id
   )
 
+  const [page, setPage] = useState(1)
+  const pageIncrease = 5
+  const { ref } = useInView({
+    threshold: 0.1,
+    onChange: (inView) => {
+      if (inView) {
+        setPage(page + 1)
+      }
+    },
+  })
+
   useEffect(() => {
     dispatch(setHeaderTitle("Exercises"))
   }, [location])
@@ -167,7 +179,7 @@ const Exercises = ({ asPicker }: Props) => {
         All Exercises ({exercises.length})
       </label>
       <ul className="mt-1 divide-y divide-gray-200">
-        {exercises.map((exercise) => {
+        {exercises.slice(0, page * pageIncrease).map((exercise) => {
           if (asPicker) {
             return (
               <div
@@ -265,6 +277,7 @@ const Exercises = ({ asPicker }: Props) => {
         {!!customExercises.length && <CustomExercises />}
         {!!exercises.length && <AllExercises />}
         {!exercises.length && <NoExercises />}
+        <div ref={ref}></div>
       </Page.Content>
     </Page>
   )
