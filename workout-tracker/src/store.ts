@@ -15,7 +15,7 @@ const store = configureStore({
    sidebar: sidebarReducer,
    headerTitle: headerTitleReducer,
    exercises: exerciseReducer,
-   workouts: workoutReducer
+   workouts: workoutReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
     immutableCheck: { warnAfter: 128 },

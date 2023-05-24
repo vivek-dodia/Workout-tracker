@@ -1,9 +1,10 @@
-import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import exerciseService from "../services/exercises"
 
 // import { refetchEntries } from "./EntryReducer"
 
 import { Exercise } from "../types"
+import { AppDispatch } from "../store"
 
 export type ExercisesState = Exercise[]
 
@@ -49,7 +50,7 @@ const {
 // ACTIONS
 
 export const initializeExercises = () => {
-  return async (dispatch: Dispatch): Promise<void> => {
+  return async (dispatch: AppDispatch): Promise<void> => {
     const exercises = await exerciseService.getAll()
     dispatch(
       _initializeExercises(exercises.sort((a, b) => (a.name > b.name ? 1 : -1)))
@@ -62,14 +63,14 @@ export const refetchExercises = () => initializeExercises()
 export const createExercise = (
   exerciseToCreate: Omit<Exercise, "id" | "user">
 ) => {
-  return async (dispatch: Dispatch): Promise<void> => {
+  return async (dispatch: AppDispatch): Promise<void> => {
     const newExercise = await exerciseService.create(exerciseToCreate)
     dispatch(_createExercise(newExercise))
   }
 }
 
 export const updateExercise = (exerciseToUpdate: Exercise) => {
-  return async (dispatch: Dispatch): Promise<void> => {
+  return async (dispatch: AppDispatch): Promise<void> => {
     const updatedExercise = await exerciseService.update(
       exerciseToUpdate.id,
       exerciseToUpdate
@@ -79,7 +80,7 @@ export const updateExercise = (exerciseToUpdate: Exercise) => {
 }
 
 export const removeExercise = (id: string) => {
-  return async (dispatch: Dispatch): Promise<void> => {
+  return async (dispatch: AppDispatch): Promise<void> => {
     await exerciseService.remove(id)
     dispatch(_removeExercise(id))
   }

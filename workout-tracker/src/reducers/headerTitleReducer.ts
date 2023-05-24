@@ -1,4 +1,5 @@
-import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { AppDispatch } from "../store"
 
 export type HeaderTitleState = string
 
@@ -20,13 +21,13 @@ const headerTitleSlice = createSlice({
 const { setTitle, clearTitle } = headerTitleSlice.actions
 
 export const setHeaderTitle = (title: string) => {
-  return (dispatch: Dispatch) => {
+  return (dispatch: AppDispatch) => {
     dispatch(setTitle(title))
   }
 }
 
 export const clearHeaderTitle = () => {
-  return (dispatch: Dispatch) => {
+  return (dispatch: AppDispatch) => {
     dispatch(clearTitle())
   }
 }

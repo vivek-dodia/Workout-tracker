@@ -1,4 +1,5 @@
-import { createSlice, Dispatch } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
+import { AppDispatch } from "../store"
 
 export type SidebarState = {
   open: boolean
@@ -22,13 +23,13 @@ const sidebarSlice = createSlice({
 const { close, toggle } = sidebarSlice.actions
 
 export const toggleSidebar = () => {
-  return (dispatch: Dispatch): void => {
+  return (dispatch: AppDispatch): void => {
     dispatch(toggle())
   }
 }
 
 export const closeSidebar = () => {
-  return (dispatch: Dispatch): void => {
+  return (dispatch: AppDispatch): void => {
     dispatch(close())
   }
 }

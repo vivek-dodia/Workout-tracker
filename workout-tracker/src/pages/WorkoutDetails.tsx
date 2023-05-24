@@ -14,7 +14,6 @@ import DropdownSection from "../components/Dropdown/DropdownSection"
 import EditOption from "../components/Dropdown/EditOption"
 import DuplicateOption from "../components/Dropdown/DuplicateOption"
 import DeleteOption from "../components/Dropdown/DeleteOption"
-import { removeExercise } from "../reducers/exerciseReducer"
 
 import {
   BarChart,
@@ -39,6 +38,7 @@ import { selectWorkoutGraphData } from "../selectors/graphDataSelectors"
 import { ValueType } from "recharts/types/component/DefaultTooltipContent"
 import { selectWorkoutData } from "../selectors/dataSelectors"
 import Button from "../components/Button"
+import { removeWorkout } from "../reducers/workoutReducer"
 
 const Details = ({ workout }: { workout: Workout }) => {
   const dispatch = useAppDispatch()
@@ -52,6 +52,10 @@ const Details = ({ workout }: { workout: Workout }) => {
   useEffect(() => {
     dispatch(setHeaderTitle(workout.name))
   }, [])
+
+  const deleteWorkout = (id: string) => {
+    dispatch(removeWorkout(id)).then(() => navigate("/app/workouts"))
+  }
 
   return (
     <Page>
@@ -84,7 +88,7 @@ const Details = ({ workout }: { workout: Workout }) => {
               </Button>
               <Button
                 variant="alert"
-                onClick={() => dispatch(removeExercise(workout.id))}
+                onClick={() => deleteWorkout(workout.id)}
               >
                 <div className="flex">
                   <TrashIcon className="mr-2 h-5 w-5" />
@@ -109,7 +113,7 @@ const Details = ({ workout }: { workout: Workout }) => {
               <DropdownSection>
                 <DeleteOption
                   title="Delete workout"
-                  onClick={() => dispatch(removeExercise(workout.id))}
+                  onClick={() => deleteWorkout(workout.id)}
                 />
               </DropdownSection>
             </Dropdown></div>

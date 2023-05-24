@@ -3,9 +3,15 @@ export type Credentials = {
   password: string
 }
 
+export enum NotificationType {
+  info = "info",
+  success = "success",
+  alert = "alert"
+}
+
 export type Notification = {
   message: string
-  type: string
+  type: NotificationType
 }
 
 export interface Measurements {

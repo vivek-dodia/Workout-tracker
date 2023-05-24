@@ -1,9 +1,10 @@
-import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import storageService from "../services/storage"
 import signInService from "../services/signIn"
 import userService from "../services/users"
 
 import { Credentials, User } from "../types"
+import { AppDispatch } from "../store"
 
 export type UserState = User | null
 
@@ -25,14 +26,14 @@ const userSlice = createSlice({
 const { setUser, removeUser } = userSlice.actions
 
 export const initUser = () => {
-  return (dispatch: Dispatch): void => {
+  return (dispatch: AppDispatch): void => {
     const userFromStorage = storageService.loadUser()
     if (userFromStorage) dispatch(setUser(userFromStorage))
   }
 }
 
 export const signIn = (credentials: Credentials) => {
-  return async (dispatch: Dispatch): Promise<string> => {
+  return async (dispatch: AppDispatch): Promise<string> => {
     const { email, password } = credentials
     const user = await signInService.signIn({ email, password })
     storageService.saveUser(user)
@@ -42,14 +43,14 @@ export const signIn = (credentials: Credentials) => {
 }
 
 export const signOut = () => {
-  return async (dispatch: Dispatch): Promise<void> => {
+  return async (dispatch: AppDispatch): Promise<void> => {
     storageService.removeUser()
     dispatch(removeUser())
   }
 }
 
 export const updateUser = (userToUpdate: User) => {
-  return async (dispatch: Dispatch): Promise<void> => {
+  return async (dispatch: AppDispatch): Promise<void> => {
     const newUser = await userService.update(userToUpdate.id, userToUpdate)
     storageService.saveUser(newUser)
     dispatch(setUser(newUser))

@@ -1,9 +1,10 @@
-import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit"
-import { Notification } from "../types"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { Notification, NotificationType } from "../types"
+import { AppDispatch } from "../store"
 
 const initialState = {
   message: "",
-  type: "",
+  type: NotificationType.info,
 } as Notification
 
 const notificationSlice = createSlice({
@@ -17,7 +18,7 @@ const notificationSlice = createSlice({
     },
     clearMessage(state): void {
       state.message = ""
-      state.type = ""
+      state.type = NotificationType.info
     },
   },
 })
@@ -27,7 +28,7 @@ const { setMessage, clearMessage } = notificationSlice.actions
 let timeoutID: number | undefined = undefined
 
 export const setNotification = (notification: Notification, duration: number = 5) => {
-  return (dispatch: Dispatch): void => {
+  return (dispatch: AppDispatch): void => {
     dispatch(clearMessage())
     clearTimeout(timeoutID)
     dispatch(setMessage(notification))
@@ -38,7 +39,7 @@ export const setNotification = (notification: Notification, duration: number = 5
 }
 
 export const clearNotification = () => {
-  return (dispatch: Dispatch): void => {
+  return (dispatch: AppDispatch): void => {
     clearTimeout(timeoutID)
     dispatch(clearMessage())
   }
