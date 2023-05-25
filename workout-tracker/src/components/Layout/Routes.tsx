@@ -8,6 +8,7 @@ import Workouts from "../../pages/Workouts"
 import WorkoutDetails from "../../pages/WorkoutDetails"
 import WorkoutForm from "../../pages/WorkoutForm/WorkoutForm"
 import Account from "../../pages/Account"
+import ExerciseForm from "../../pages/ExerciseForm"
 
 const Routes = () => {
   return (
@@ -22,6 +23,9 @@ const Routes = () => {
         <Route path="/exercises">
           <Route index element={<Exercises />} />
           <Route path=":id" element={<ExerciseDetails />} />
+          <Route path="new" element={<ExerciseForm />} /> 
+          <Route path="update/:id" element={<ExerciseForm updating />} />
+          <Route path="duplicate/:id" element={<ExerciseForm duplicating />} />
         </Route>
         <Route path="/workouts">
           <Route index element={<Workouts />} />

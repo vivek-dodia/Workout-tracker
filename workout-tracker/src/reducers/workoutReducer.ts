@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import workoutService from "../services/workouts"
 
-import { NotificationType, Workout } from "../types"
+import { Exercise, NotificationType, Workout } from "../types"
 import { setNotification } from "./notificationReducer"
 import { AppDispatch } from "../store"
 
@@ -30,26 +30,55 @@ export const workoutSlice = createSlice({
     _removeWorkout(state, { payload }: PayloadAction<string>): WorkoutsState {
       return state.filter((workout) => workout.id !== payload)
     },
+    _removeExerciseFromWorkouts(
+      state,
+      { payload }: PayloadAction<string>
+    ): WorkoutsState {
+      return state.map((workout) => ({
+        ...workout,
+        exercises: workout.exercises.filter(
+          (exercise) => exercise._exercise.id !== payload
+        ),
+      }))
+    },
+    _updateExerciseForWorkouts(
+      state,
+      { payload }: PayloadAction<Exercise>
+    ): WorkoutsState {
+      return state.map((workout) => ({
+        ...workout,
+        exercises: workout.exercises.map((exercise) => ({
+          ...exercise,
+          _exercise:
+            payload.id === exercise._exercise.id ? payload : exercise._exercise,
+        })),
+      }))
+    },
   },
 })
 
-const { _initializeWorkouts, _createWorkout, _updateWorkout, _removeWorkout } =
-  workoutSlice.actions
+const {
+  _initializeWorkouts,
+  _createWorkout,
+  _updateWorkout,
+  _removeWorkout,
+  _removeExerciseFromWorkouts,
+  _updateExerciseForWorkouts
+} = workoutSlice.actions
 
 // ACTIONS
 
 export const initializeWorkouts = () => {
-  return async (dispatch: AppDispatch): Promise<void> => {
+  return async (dispatch: AppDispatch): Promise<Workout[]> => {
     const workouts = await workoutService.getAll()
-    dispatch(
-      _initializeWorkouts(workouts.sort((a, b) => (a.name > b.name ? 1 : -1)))
-    )
+    dispatch(_initializeWorkouts(workouts))
     dispatch(
       setNotification({
         message: "Initialized Workouts",
         type: NotificationType.success,
       })
     )
+    return workouts
   }
 }
 
@@ -61,6 +90,12 @@ export const createWorkout = (
   return async (dispatch: AppDispatch): Promise<Workout> => {
     const newWorkout = await workoutService.create(workoutToCreate)
     dispatch(_createWorkout(newWorkout))
+    dispatch(
+      setNotification({
+        message: `Created workout: ${newWorkout.name}`,
+        type: NotificationType.success,
+      })
+    )
     return newWorkout
   }
 }
@@ -72,6 +107,12 @@ export const updateWorkout = (workoutToUpdate: Workout) => {
       workoutToUpdate
     )
     dispatch(_updateWorkout(updatedWorkout))
+    dispatch(
+      setNotification({
+        message: `Updated workout: ${updatedWorkout.name}`,
+        type: NotificationType.success,
+      })
+    )
     return updatedWorkout
   }
 }
@@ -87,6 +128,18 @@ export const removeWorkout = (id: string) => {
       })
     )
     return removedWorkout
+  }
+}
+
+export const removeExerciseFromWorkouts = (id: string) => {
+  return async (dispatch: AppDispatch): Promise<void> => {
+    dispatch(_removeExerciseFromWorkouts(id))
+  }
+}
+
+export const updateExerciseForWorkouts = (exercise: Exercise) => {
+  return async (dispatch: AppDispatch): Promise<void> => {
+    dispatch(_updateExerciseForWorkouts(exercise))
   }
 }
 

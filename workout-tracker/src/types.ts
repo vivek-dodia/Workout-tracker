@@ -6,7 +6,7 @@ export type Credentials = {
 export enum NotificationType {
   info = "info",
   success = "success",
-  alert = "alert"
+  alert = "alert",
 }
 
 export type Notification = {
@@ -58,16 +58,43 @@ export enum MuscleGroup {
   abs = "Abs",
 }
 
+export interface MuscleGroupOption {
+  label: string
+  value: MuscleGroup
+}
+
+export interface EquipmentOption {
+  label: string
+  value: Equipment | ""
+}
+
+export interface ExerciseTypeOption {
+  label: string
+  value: ExerciseType | ""
+}
+
 export interface Exercise {
   id: string
   name: string
   user: string
   videoId?: string
-  orm: number
   muscleGroups: MuscleGroup[]
   equipment: Equipment
   type: ExerciseType
   bodyweightFactor: number
+}
+
+export interface FormExercise {
+  name: string
+  videoId?: string
+  muscleGroups: MuscleGroupOption[]
+  equipment: EquipmentOption
+  type: ExerciseTypeOption
+  bodyweightFactor: string
+}
+
+export interface FormExerciseWithUser extends FormExercise {
+  user: string
 }
 
 export enum SetType {

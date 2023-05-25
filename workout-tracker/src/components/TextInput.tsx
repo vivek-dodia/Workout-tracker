@@ -29,7 +29,7 @@ const TextInput = ({
             props.disabled ? "opacity-60" : "opacity-100",
             simple
               ? "outline-none"
-              : "rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              : "rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-500"
           )}
           {...props}
         />

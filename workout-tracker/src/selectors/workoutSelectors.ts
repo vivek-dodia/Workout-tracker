@@ -9,7 +9,10 @@ import { compareDesc, parseISO } from "date-fns"
 export const selectWorkouts = createSelector(
   [(state: RootState): Workout[] => state.workouts],
   (workouts: Workout[]): Workout[] => {
-    return workouts
+    console.log("Select Workouts")
+    return [...workouts].sort((a, b) =>
+      a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+    )
   }
 )
 

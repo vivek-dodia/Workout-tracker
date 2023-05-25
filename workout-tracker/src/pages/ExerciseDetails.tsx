@@ -35,6 +35,7 @@ import DuplicateOption from "../components/Dropdown/DuplicateOption"
 import EditOption from "../components/Dropdown/EditOption"
 import DropdownSection from "../components/Dropdown/DropdownSection"
 import Button from "../components/Button"
+import YoutubeEmbed from "../components/YoutubeEmbed"
 
 const Details = ({ exercise }: { exercise: Exercise }) => {
   const dispatch = useAppDispatch()
@@ -130,13 +131,7 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
           <div className="mt-8 grid grid-cols-2 gap-4">
             {!!exercise.videoId && (
               <div className="flex flex-col gap-4">
-                <iframe
-                  className="aspect-video"
-                  src={`https://www.youtube.com/embed/${exercise.videoId}`}
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                ></iframe>
+                <YoutubeEmbed embedId={exercise.videoId} />
               </div>
             )}
             <div className="flex flex-col px-6">

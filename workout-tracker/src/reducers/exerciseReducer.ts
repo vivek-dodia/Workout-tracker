@@ -1,10 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import exerciseService from "../services/exercises"
+import {
+  removeExerciseFromWorkouts,
+  updateExerciseForWorkouts,
+} from "./workoutReducer"
 
-// import { refetchEntries } from "./EntryReducer"
-
-import { Exercise } from "../types"
+import { Exercise, NotificationType } from "../types"
 import { AppDispatch } from "../store"
+import { setNotification } from "./notificationReducer"
 
 export type ExercisesState = Exercise[]
 
@@ -50,11 +53,16 @@ const {
 // ACTIONS
 
 export const initializeExercises = () => {
-  return async (dispatch: AppDispatch): Promise<void> => {
+  return async (dispatch: AppDispatch): Promise<Exercise[]> => {
     const exercises = await exerciseService.getAll()
+    dispatch(_initializeExercises(exercises))
     dispatch(
-      _initializeExercises(exercises.sort((a, b) => (a.name > b.name ? 1 : -1)))
+      setNotification({
+        message: "Initialized Exercises",
+        type: NotificationType.success,
+      })
     )
+    return exercises
   }
 }
 
@@ -63,26 +71,49 @@ export const refetchExercises = () => initializeExercises()
 export const createExercise = (
   exerciseToCreate: Omit<Exercise, "id" | "user">
 ) => {
-  return async (dispatch: AppDispatch): Promise<void> => {
+  return async (dispatch: AppDispatch): Promise<Exercise> => {
     const newExercise = await exerciseService.create(exerciseToCreate)
     dispatch(_createExercise(newExercise))
+    dispatch(
+      setNotification({
+        message: `Created exercise: ${newExercise.name}`,
+        type: NotificationType.success,
+      })
+    )
+    return newExercise
   }
 }
 
 export const updateExercise = (exerciseToUpdate: Exercise) => {
-  return async (dispatch: AppDispatch): Promise<void> => {
+  return async (dispatch: AppDispatch): Promise<Exercise> => {
     const updatedExercise = await exerciseService.update(
       exerciseToUpdate.id,
       exerciseToUpdate
     )
     dispatch(_updateExercise(updatedExercise))
+    dispatch(updateExerciseForWorkouts(updatedExercise))
+    dispatch(
+      setNotification({
+        message: `Updated exercise: ${updatedExercise.name}`,
+        type: NotificationType.success,
+      })
+    )
+    return updatedExercise
   }
 }
 
 export const removeExercise = (id: string) => {
-  return async (dispatch: AppDispatch): Promise<void> => {
-    await exerciseService.remove(id)
+  return async (dispatch: AppDispatch): Promise<Exercise> => {
+    const removedExercise = await exerciseService.remove(id)
     dispatch(_removeExercise(id))
+    dispatch(removeExerciseFromWorkouts(id))
+    dispatch(
+      setNotification({
+        message: `Deleted exercise: ${removedExercise.name}`,
+        type: NotificationType.success,
+      })
+    )
+    return removedExercise
   }
 }
 

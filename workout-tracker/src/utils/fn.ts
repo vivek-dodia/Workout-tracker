@@ -1,4 +1,4 @@
-import { ExerciseType } from "../types"
+import { ExerciseType, ExerciseTypeOption } from "../types"
 import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore"
 import { RootState } from "../store"
 
@@ -53,5 +53,25 @@ export const getWeight = (
       return bw + setWeight
     default:
       return setWeight
+  }
+}
+
+export const getExerciseTypeOption = (
+  type: ExerciseType
+): ExerciseTypeOption => {
+  switch (type) {
+    case ExerciseType.repsAndKg:
+      return { label: "Reps & Weight", value: ExerciseType.repsAndKg }
+    case ExerciseType.repsAndBw:
+      return { label: "Bodyweight Reps", value: ExerciseType.repsAndBw }
+    case ExerciseType.repsAndPlusKg:
+      return { label: "Weighted Bodyweight", value: ExerciseType.repsAndPlusKg }
+    case ExerciseType.repsAndMinusKg:
+      return {
+        label: "Assisted Bodyweight",
+        value: ExerciseType.repsAndMinusKg,
+      }
+    default:
+      return { label: "Reps & Weight", value: ExerciseType.repsAndKg }
   }
 }
