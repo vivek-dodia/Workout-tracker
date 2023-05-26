@@ -1,10 +1,11 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { Workout, SetWithData } from "../types"
-import { compareDesc, parseISO } from "date-fns"
+import { compareAsc, compareDesc, parseISO } from "date-fns"
 
 import { selectWorkouts } from "./workoutSelectors"
+import { selectId } from "./commonSelectors"
 
-export const selecSetsWithData = createSelector(
+export const selectSetsWithData = createSelector(
   [selectWorkouts],
   (workouts: Workout[]): SetWithData[] => {
     return workouts
@@ -23,11 +24,34 @@ export const selecSetsWithData = createSelector(
   }
 )
 
-export const selecSetsWithDataSortedByDescDate = createSelector(
-  [selecSetsWithData],
+export const selectSetsWithDataSortedByDescDate = createSelector(
+  [selectSetsWithData],
   (sets: SetWithData[]): SetWithData[] => {
     return [...sets].sort((a, b) =>
       compareDesc(parseISO(a.date), parseISO(b.date))
     )
+  }
+)
+
+export const selectSetsWithDataSortedByAscDate = createSelector(
+  [selectSetsWithData],
+  (sets: SetWithData[]): SetWithData[] => {
+    return [...sets].sort((a, b) =>
+      compareAsc(parseISO(a.date), parseISO(b.date))
+    )
+  }
+)
+
+export const selectSetsWithDataByExerciseIdSortedByDescDate = createSelector(
+  [selectSetsWithDataSortedByDescDate, selectId],
+  (sets: SetWithData[], id: string): SetWithData[] => {
+    return sets.filter((set) => set.exerciseId === id)
+  }
+)
+
+export const selectSetsWithDataByExerciseIdSortedByAscDate = createSelector(
+  [selectSetsWithDataSortedByAscDate, selectId],
+  (sets: SetWithData[], id: string): SetWithData[] => {
+    return sets.filter((set) => set.exerciseId === id)
   }
 )

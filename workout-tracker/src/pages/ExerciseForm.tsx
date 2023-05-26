@@ -39,7 +39,7 @@ const ExerciseForm = ({ updating, duplicating }: ExerciseFormProps) => {
   const { notify } = useNotify()
   const [exercise, setExercise] = useState<types.FormExercise>(EMPTY_EXERCISE)
   const unauthorized =
-    selectedExercise && user && selectedExercise.user !== user.id
+    updating && selectedExercise && user && selectedExercise.user !== user.id
 
   useEffect(() => {
     resetState()

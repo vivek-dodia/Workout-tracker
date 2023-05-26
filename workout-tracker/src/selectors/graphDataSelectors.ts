@@ -1,6 +1,10 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { selectWorkoutById } from "./workoutSelectors"
-import { MuscleGroup } from "../types"
+import { ExerciseGraphData, Grouping, MuscleGroup, SetWithData } from "../types"
+import { selectSetsWithDataByExerciseIdSortedByAscDate } from "./setSelectors"
+import { getIndexAndDate, oneRepMax } from "../utils/fn"
+import { format, parseISO } from "date-fns"
+import { selectIdAndGrouping } from "./commonSelectors"
 
 export const selectWorkoutGraphData = createSelector(
   [selectWorkoutById],
@@ -36,5 +40,55 @@ export const selectWorkoutGraphData = createSelector(
       percentVolume: ((obj.volume / totalVolume) * 100).toFixed(1) + "%",
       percentSets: ((obj.sets / totalSets) * 100).toFixed(1) + "%",
     }))
+  }
+)
+
+export const selectExerciseGraphData = createSelector(
+  [selectSetsWithDataByExerciseIdSortedByAscDate, selectIdAndGrouping],
+  (sets: SetWithData[], grouping: Grouping): ExerciseGraphData[] => {
+    const start: number = Date.now()
+
+    const byWorkout: ExerciseGraphData[] = sets
+      .reduce((acc, cur) => {
+        const { index, date } = getIndexAndDate(acc, cur, grouping)
+
+        if (index === -1) {
+          acc.push({
+            date,
+            sets: 1,
+            volume: cur.reps * cur.actualWeight,
+            heaviestWeight: cur.actualWeight,
+            orm: oneRepMax(cur.reps, cur.actualWeight),
+            topSetVolume: cur.reps * cur.actualWeight,
+            totalReps: cur.reps,
+          })
+        } else {
+          acc[index].sets += 1
+          acc[index].totalReps += cur.reps
+          acc[index].volume += cur.reps * cur.actualWeight
+          acc[index].heaviestWeight = Math.max(
+            acc[index].heaviestWeight,
+            cur.actualWeight
+          )
+          acc[index].orm = Math.max(
+            acc[index].orm,
+            oneRepMax(cur.reps, cur.actualWeight)
+          )
+          acc[index].topSetVolume = Math.max(
+            acc[index].topSetVolume,
+            cur.reps * cur.actualWeight
+          )
+        }
+        return acc
+      }, [] as Omit<ExerciseGraphData, "formattedDate">[])
+      .map((obj) => ({
+        ...obj,
+        formattedDate: format(parseISO(obj.date), "dd.MM.yy"),
+        orm: +obj.orm.toFixed(2),
+      }))
+    // { date: string; sets: number; volume: number; heaviestWeight: number; orm: number; topSetVolume: number; totalReps: number }[]
+    console.log(`Calculated data in: ${Date.now() - start}ms`)
+
+    return byWorkout
   }
 )

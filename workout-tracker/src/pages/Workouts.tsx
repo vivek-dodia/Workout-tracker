@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "../hooks"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { selectWorkoutsByQuery } from "../selectors/workoutSelectors"
 import { setHeaderTitle } from "../reducers/headerTitleReducer"
 import Page from "../components/Layout/Page"
@@ -8,9 +8,11 @@ import SearchBar from "../components/SearchBar"
 import { ChevronRightIcon } from "@heroicons/react/24/outline"
 import { format, parseISO } from "date-fns"
 import { useInView } from "react-intersection-observer"
+import Button from "../components/Button"
 
 const Workouts = () => {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const location = useLocation()
   const [searchQuery, setSearchQuery] = useState<string>("")
 
@@ -130,12 +132,12 @@ const Workouts = () => {
               setSearchQuery={setSearchQuery}
               placeholder="Search workouts..."
             />
-            <Link
-              to="/app/workouts/new"
-              className="bg-green-500 hover:bg-green-700 rounded-md p-2 text-white flex items-center justify-center"
+            <Button
+              variant="success"
+              onClick={() => navigate("/app/workouts/new")}
             >
-              <h3>Add workout</h3>
-            </Link>
+              Add workout
+            </Button>
           </div>
         </div>
       </Page.Header>

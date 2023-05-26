@@ -1,15 +1,23 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { RootState } from "../store"
+import { Grouping } from "../types"
 
 export const selectId = createSelector(
-  [(_: RootState, id: string): string => id],
+  [(_state: RootState, id: string): string => id],
   (id: string): string => {
     return id
   }
 )
 
+export const selectIdAndGrouping = createSelector(
+  [(_state: RootState, _id: string, grouping: Grouping): Grouping => grouping],
+  (grouping: Grouping): Grouping => {
+    return grouping
+  }
+)
+
 export const selectQuery = createSelector(
-  [(_: RootState, query: string): string => query],
+  [(_state: RootState, query: string): string => query],
   (query: string): string => {
     return query
   }

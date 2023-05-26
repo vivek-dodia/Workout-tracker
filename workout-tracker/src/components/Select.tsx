@@ -2,23 +2,32 @@ import { Fragment } from "react"
 import { Listbox, Transition } from "@headlessui/react"
 import { CheckIcon } from "@heroicons/react/24/solid"
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline"
-import { EquipmentOption, ExerciseTypeOption } from "../types"
+import {
+  EquipmentOption,
+  ExerciseTypeOption,
+  DateOption,
+  StringOption,
+} from "../types"
 
 type SelectProps<T> = {
   value: T
   label?: string
   options: T[]
   onChange: (value: T) => void
+  className?: string
 }
 
-const Select = <T extends EquipmentOption | ExerciseTypeOption>({
+const Select = <
+  T extends StringOption | DateOption | EquipmentOption | ExerciseTypeOption
+>({
   value,
   label,
   options,
   onChange,
+  className
 }: SelectProps<T>) => {
   return (
-    <div>
+    <div className={className}>
       <Listbox value={value} onChange={onChange}>
         <Listbox.Label className="block font-medium leading-6">
           {label}

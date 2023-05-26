@@ -58,6 +58,16 @@ export enum MuscleGroup {
   abs = "Abs",
 }
 
+export interface StringOption {
+  label: string
+  value: string
+}
+
+export interface DateOption {
+  label: string
+  value: Date
+}
+
 export interface MuscleGroupOption {
   label: string
   value: MuscleGroup
@@ -176,3 +186,25 @@ type IconProps = IconSVGProps & {
 }
 
 export type HeroIcon = React.FC<IconProps>
+
+export interface ExerciseGraphData {
+  formattedDate: string
+  orm: number
+  date: string
+  sets: number
+  volume: number
+  heaviestWeight: number
+  topSetVolume: number
+  totalReps: number
+}
+
+export enum Grouping {
+  byWorkout = "byWorkout",
+  byWeek = "byWeek",
+  byMonth = "byMonth"
+}
+
+export interface GroupingOption {
+  label: string
+  value: Grouping
+}

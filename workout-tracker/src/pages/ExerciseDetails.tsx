@@ -8,6 +8,7 @@ import {
   CartesianGrid,
   Tooltip as ChartsTooltip,
   ResponsiveContainer,
+  Legend,
 } from "recharts"
 
 import {
@@ -19,13 +20,13 @@ import {
 } from "@heroicons/react/24/outline"
 
 import Page from "../components/Layout/Page"
-import { useEffect } from "react"
+import { useEffect, useMemo, useState, Dispatch } from "react"
 import GoBackButton from "../components/GoBackButton"
 import { useAppDispatch, useAppSelector } from "../hooks"
 import { selectExerciseById } from "../selectors/exerciseSelectors"
 import NoExerciseMatch from "./NoMatch/NoExerciseMatch"
 
-import { Exercise } from "../types"
+import { Exercise, ExerciseGraphData, Grouping, GroupingOption } from "../types"
 import { setHeaderTitle } from "../reducers/headerTitleReducer"
 import { selectUser } from "../selectors/userSelectors"
 import { removeExercise } from "../reducers/exerciseReducer"
@@ -36,12 +37,139 @@ import EditOption from "../components/Dropdown/EditOption"
 import DropdownSection from "../components/Dropdown/DropdownSection"
 import Button from "../components/Button"
 import YoutubeEmbed from "../components/YoutubeEmbed"
+import { CustomChip } from "./Exercises"
+import { selectExerciseGraphData } from "../selectors/graphDataSelectors"
+import { selectExerciseData } from "../selectors/dataSelectors"
+import { isWithinInterval, parseISO } from "date-fns"
+import {
+  EXERCISE_DATA_KEY_OPTIONS,
+  GROUPING_OPTIONS,
+  START_DATE_OPTIONS,
+} from "../utils/const"
+import Select from "../components/Select"
+
+type GraphProps = {
+  graphData: ExerciseGraphData[]
+  selectedGrouping: GroupingOption
+  setSelectedGrouping: Dispatch<GroupingOption>
+}
+
+const Graph = ({
+  graphData,
+  selectedGrouping,
+  setSelectedGrouping,
+}: GraphProps) => {
+  const navigate = useNavigate()
+  const [selectedDataKey, setSelectedDataKey] = useState(
+    EXERCISE_DATA_KEY_OPTIONS[0]
+  )
+  const [selectedStartDate, setSelectedStartDate] = useState(
+    START_DATE_OPTIONS[0]
+  )
+
+  const filteredGraphData = useMemo(
+    () =>
+      graphData.filter((data) =>
+        isWithinInterval(parseISO(data.date), {
+          start: selectedStartDate.value,
+          end: new Date(),
+        })
+      ),
+    [graphData, selectedStartDate]
+  )
+
+  return (
+    <div>
+      <div className="flex gap-4">
+        <Select
+          className="flex-1"
+          label="Data"
+          value={selectedDataKey}
+          options={EXERCISE_DATA_KEY_OPTIONS}
+          onChange={(value) => setSelectedDataKey(value)}
+        />
+
+        <Select
+          className="flex-1"
+          label="Grouped By"
+          value={selectedGrouping}
+          options={GROUPING_OPTIONS}
+          onChange={(value) => setSelectedGrouping(value)}
+        />
+
+        <Select
+          className="flex-1"
+          label="Interval"
+          value={selectedStartDate}
+          options={START_DATE_OPTIONS}
+          onChange={(value) => setSelectedStartDate(value)}
+        />
+      </div>
+
+      {!filteredGraphData.length && (
+        <div className="my-8 flex flex-col justify-center items-center gap-4">
+          <div className="">
+            <h3 className="font-medium">
+              No graph data to show.{" "}
+              {!graphData.length ? "Get to work!" : "Try changing variables."}
+            </h3>
+            {!!graphData.length && (
+              <h4 className="text-sm text-gray-500">
+                This usually means you have selected shorter interval than
+                grouping.
+              </h4>
+            )}
+          </div>
+          {!graphData.length && (
+            <Button
+              variant="success"
+              onClick={() => navigate("/app/workouts/new")}
+            >
+              Add workout
+            </Button>
+          )}
+        </div>
+      )}
+
+      {!!filteredGraphData.length && (
+        <ResponsiveContainer className="mx-auto mt-8" width="100%" height={400}>
+          <LineChart data={filteredGraphData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="formattedDate"
+              interval="preserveStartEnd"
+              minTickGap={15}
+              tickMargin={10}
+            />
+            <YAxis type="number" domain={["auto", "auto"]} />
+            <ChartsTooltip />
+            <Legend wrapperStyle={{ paddingTop: 10 }} />
+            <Line
+              name={selectedDataKey.label}
+              type="linear"
+              dataKey={selectedDataKey.value}
+              stroke="#2563eb"
+              activeDot={{ r: 6 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      )}
+    </div>
+  )
+}
 
 const Details = ({ exercise }: { exercise: Exercise }) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const user = useAppSelector(selectUser)
   const isCustomExercise = exercise.user === user?.id
+  const data = useAppSelector((state) =>
+    selectExerciseData(state, exercise.id, Grouping.byWorkout)
+  )
+  const [selectedGrouping, setSelectedGrouping] = useState(GROUPING_OPTIONS[0])
+  const graphData = useAppSelector((state) =>
+    selectExerciseGraphData(state, exercise.id, selectedGrouping.value)
+  )
 
   useEffect(() => {
     dispatch(setHeaderTitle(exercise.name))
@@ -137,9 +265,12 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
             <div className="flex flex-col px-6">
               <div className="flex flex-col">
                 <h1 className="font-bold text-lg">{exercise.name}</h1>
-                <p className="text-sm text-gray-500">
-                  Muscle Groups: {exercise.muscleGroups.join(", ")}
-                </p>
+                <div className="flex gap-4 items-center">
+                  <p className="text-sm text-gray-500">
+                    Muscle Groups: {exercise.muscleGroups.join(", ")}
+                  </p>
+                  {exercise.user === user?.id && <CustomChip />}
+                </div>
               </div>
               <div className="mt-4">
                 <ol className="list-decimal pl-4 space-y-2 text-sm">
@@ -167,52 +298,12 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
               </div>
             </div>
 
-            <div className="col-span-2 mt-8">
-              <ResponsiveContainer
-                className="mx-auto"
-                width="100%"
-                height={300}
-              >
-                <LineChart
-                  data={[
-                    {
-                      name: "Page A",
-                      uv: 4000,
-                      pv: 2400,
-                      amt: 2400,
-                    },
-                    {
-                      name: "Page B",
-                      uv: 3000,
-                      pv: 1398,
-                      amt: 2210,
-                    },
-                  ]}
-                  margin={{
-                    top: 10,
-                    right: 10,
-                    left: 10,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="name"
-                    interval="preserveStartEnd"
-                    minTickGap={15}
-                    tickMargin={10}
-                  />
-                  <YAxis type="number" domain={["auto", "auto"]} />
-                  <ChartsTooltip />
-                  <Line
-                    name={"label"}
-                    type="monotone"
-                    dataKey={"pv"}
-                    stroke="#8884d8"
-                    activeDot={{ r: 8 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+            <div className="col-span-2 mt-8 bg-white p-4 rounded-lg shadow-md">
+              <Graph
+                graphData={graphData}
+                selectedGrouping={selectedGrouping}
+                setSelectedGrouping={setSelectedGrouping}
+              />
             </div>
 
             <div>

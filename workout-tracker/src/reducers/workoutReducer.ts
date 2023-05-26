@@ -34,12 +34,14 @@ export const workoutSlice = createSlice({
       state,
       { payload }: PayloadAction<string>
     ): WorkoutsState {
-      return state.map((workout) => ({
-        ...workout,
-        exercises: workout.exercises.filter(
-          (exercise) => exercise._exercise.id !== payload
-        ),
-      }))
+      return state
+        .map((workout) => ({
+          ...workout,
+          exercises: workout.exercises.filter(
+            (exercise) => exercise._exercise.id !== payload
+          ),
+        }))
+        .filter((workout) => workout.exercises.length)
     },
     _updateExerciseForWorkouts(
       state,
@@ -63,7 +65,7 @@ const {
   _updateWorkout,
   _removeWorkout,
   _removeExerciseFromWorkouts,
-  _updateExerciseForWorkouts
+  _updateExerciseForWorkouts,
 } = workoutSlice.actions
 
 // ACTIONS

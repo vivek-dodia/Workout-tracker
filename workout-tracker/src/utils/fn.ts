@@ -1,6 +1,7 @@
-import { ExerciseType, ExerciseTypeOption } from "../types"
+import { ExerciseGraphData, ExerciseType, ExerciseTypeOption, Grouping, SetWithData } from "../types"
 import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore"
 import { RootState } from "../store"
+import { isSameISOWeek, isSameMonth, parseISO, startOfISOWeek, startOfMonth } from "date-fns"
 
 let store: ToolkitStore
 
@@ -40,7 +41,7 @@ export const getWeight = (
 ) => {
   const state: RootState = store.getState()
   const user = state.user!
-  const bw = user.measurements.bodyweight * bodyweightFactor
+  const bw = user.measurements.bodyweight * (bodyweightFactor / 100)
 
   switch (exerciseType) {
     case ExerciseType.repsAndKg:
@@ -73,5 +74,69 @@ export const getExerciseTypeOption = (
       }
     default:
       return { label: "Reps & Weight", value: ExerciseType.repsAndKg }
+  }
+}
+
+// Brzycki 1RM formula
+// 1RM = w / [1.0278 - (0.0278 * r)]
+// accurate for <= 10 reps
+export const brzycki1RM = (r: number, w: number): number => {
+  return w / (1.0278 - 0.0278 * r)
+}
+
+// Epley 1RM formula
+// 1RM = w * (1 + (0.0333 * r))
+// Better than Brzycki for > 10 reps
+export const epley1RM = (r: number, w: number): number => {
+  return w * (1 + 0.0333 * r)
+}
+
+export const oneRepMax = (r: number, w: number) => {
+  const reps = r
+  const weight = w
+  return reps > 10 ? epley1RM(reps, weight) : brzycki1RM(reps, weight)
+}
+
+export const getIndexAndDate = (
+  acc: Omit<ExerciseGraphData, "formattedDate">[],
+  cur: SetWithData,
+  grouping: Grouping
+): {
+  index: number
+  date: string
+} => {
+  switch (grouping) {
+    case Grouping.byWorkout:
+      return {
+        index: acc.findIndex((obj) =>
+          !obj.date ? false : obj.date === cur.date
+        ),
+        date: cur.date,
+      }
+    case Grouping.byWeek:
+      return {
+        index: acc.findIndex((obj) =>
+          !obj.date
+            ? false
+            : isSameISOWeek(parseISO(obj.date), parseISO(cur.date))
+        ),
+        date: startOfISOWeek(parseISO(cur.date)).toISOString(),
+      }
+    case Grouping.byMonth:
+      return {
+        index: acc.findIndex((obj) =>
+          !obj.date
+            ? false
+            : isSameMonth(parseISO(obj.date), parseISO(cur.date))
+        ),
+        date: startOfMonth(parseISO(cur.date)).toISOString(),
+      }
+    default:
+      return {
+        index: acc.findIndex((obj) =>
+          !obj.date ? false : obj.date === cur.date
+        ),
+        date: cur.date,
+      }
   }
 }

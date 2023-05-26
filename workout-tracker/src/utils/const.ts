@@ -1,3 +1,4 @@
+import { sub } from "date-fns"
 import {
   FormSet,
   SetType,
@@ -10,6 +11,10 @@ import {
   MuscleGroupOption,
   MuscleGroup,
   ExerciseTypeOption,
+  DateOption,
+  StringOption,
+  GroupingOption,
+  Grouping,
 } from "../types"
 
 import { getExerciseTypeOption } from "./fn"
@@ -25,6 +30,31 @@ export const MUSCLE_GROUP_OPTIONS: MuscleGroupOption[] = Object.values(
 export const EXERCISE_TYPE_OPTIONS: ExerciseTypeOption[] = Object.values(
   ExerciseType
 ).map((value) => getExerciseTypeOption(value))
+
+export const START_DATE_OPTIONS: DateOption[] = [
+  { label: "1 Week", value: sub(new Date(), { weeks: 1 }) },
+  { label: "2 Weeks", value: sub(new Date(), { weeks: 2 }) },
+  { label: "1 Month", value: sub(new Date(), { months: 1 }) },
+  { label: "3 Months", value: sub(new Date(), { months: 3 }) },
+  { label: "6 Months", value: sub(new Date(), { months: 6 }) },
+  { label: "1 Year", value: sub(new Date(), { years: 1 }) },
+  { label: "All Time", value: new Date(-1, 0) },
+]
+
+export const EXERCISE_DATA_KEY_OPTIONS: StringOption[] = [
+  { label: "Volume", value: "volume" },
+  { label: "Heaviest Weight", value: "heaviestWeight" },
+  { label: "One Rep Max", value: "orm" },
+  { label: "Top Set Volume", value: "topSetVolume" },
+  { label: "Total Reps", value: "totalReps" },
+  { label: "Sets", value: "sets" },
+]
+
+export const GROUPING_OPTIONS: GroupingOption[] = [
+  { label: "Workout", value: Grouping.byWorkout },
+  { label: "Week", value: Grouping.byWeek },
+  { label: "Month", value: Grouping.byMonth },
+]
 
 export const EMPTY_SET: FormSet = {
   type: SetType.working,

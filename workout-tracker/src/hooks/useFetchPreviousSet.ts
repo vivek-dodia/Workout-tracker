@@ -1,9 +1,9 @@
 import { useAppSelector } from "."
-import { selecSetsWithDataSortedByDescDate } from "../selectors/setSelectors"
+import { selectSetsWithDataSortedByDescDate } from "../selectors/setSelectors"
 import { SetType } from "../types"
 
 const useFetchPreviousSet = () => {
-  const sets = useAppSelector(selecSetsWithDataSortedByDescDate)
+  const sets = useAppSelector(selectSetsWithDataSortedByDescDate)
 
   const fetchPreviousSet = (
     exerciseId: string,
