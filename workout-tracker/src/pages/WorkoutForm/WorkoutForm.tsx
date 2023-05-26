@@ -486,6 +486,7 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
                   moveExerciseDown={moveExerciseDown}
                   removeExercise={removeExercise}
                   addEmptySetForExercise={addEmptySetForExercise}
+                  duplicateSet={duplicateSet}
                   setReplacingExercise={setReplacingExercise}
                   updateExercise={updateExercise}
                 />
@@ -496,6 +497,7 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
                   exerciseId={workoutExercise._exercise.id}
                   exerciseType={workoutExercise._exercise.type}
                   addEmptySetForExercise={addEmptySetForExercise}
+                  duplicateSet={duplicateSet}
                   removeAllSetsForExercise={removeAllSetsForExercise}
                   updateAllSetsForExercise={updateAllSetsForExercise}
                   fetchPreviousSet={fetchPreviousSet}

@@ -46,9 +46,7 @@ export const selectWorkoutGraphData = createSelector(
 export const selectExerciseGraphData = createSelector(
   [selectSetsWithDataByExerciseIdSortedByAscDate, selectIdAndGrouping],
   (sets: SetWithData[], grouping: Grouping): ExerciseGraphData[] => {
-    const start: number = Date.now()
-
-    const byWorkout: ExerciseGraphData[] = sets
+    return sets
       .reduce((acc, cur) => {
         const { index, date } = getIndexAndDate(acc, cur, grouping)
 
@@ -86,9 +84,5 @@ export const selectExerciseGraphData = createSelector(
         formattedDate: format(parseISO(obj.date), "dd.MM.yy"),
         orm: +obj.orm.toFixed(2),
       }))
-    // { date: string; sets: number; volume: number; heaviestWeight: number; orm: number; topSetVolume: number; totalReps: number }[]
-    console.log(`Calculated data in: ${Date.now() - start}ms`)
-
-    return byWorkout
   }
 )

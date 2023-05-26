@@ -1,4 +1,5 @@
 import { classNames } from "../utils/fn"
+import Spinner from "./Spinner"
 
 type Variant =
   | "primary"

@@ -36,7 +36,7 @@ import Tooltip from "../components/Tooltip"
 import { format, parseISO } from "date-fns"
 import { selectWorkoutGraphData } from "../selectors/graphDataSelectors"
 import { ValueType } from "recharts/types/component/DefaultTooltipContent"
-import { selectWorkoutData } from "../selectors/dataSelectors"
+import { selectWorkoutStats } from "../selectors/statsSelectors"
 import Button from "../components/Button"
 import { removeWorkout } from "../reducers/workoutReducer"
 
@@ -44,7 +44,7 @@ const Details = ({ workout }: { workout: Workout }) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const user = useAppSelector(selectUser)
-  const data = useAppSelector((state) => selectWorkoutData(state, workout.id))
+  const stats = useAppSelector((state) => selectWorkoutStats(state, workout.id))
   const graphData = useAppSelector((state) =>
     selectWorkoutGraphData(state, workout.id)
   )
@@ -64,7 +64,7 @@ const Details = ({ workout }: { workout: Workout }) => {
           <div>
             <GoBackButton to="/app/workouts">Workouts</GoBackButton>
           </div>
-          <div className="flex items-center gap-4"> 
+          <div className="flex items-center gap-4">
             <div className="hidden lg:flex gap-2">
               <Button
                 variant="secondary"
@@ -86,10 +86,7 @@ const Details = ({ workout }: { workout: Workout }) => {
                   <h3>Duplicate workout</h3>
                 </div>
               </Button>
-              <Button
-                variant="alert"
-                onClick={() => deleteWorkout(workout.id)}
-              >
+              <Button variant="alert" onClick={() => deleteWorkout(workout.id)}>
                 <div className="flex">
                   <TrashIcon className="mr-2 h-5 w-5" />
                   <h3>Delete workout</h3>
@@ -97,26 +94,29 @@ const Details = ({ workout }: { workout: Workout }) => {
               </Button>
             </div>
             <div className="block lg:hidden">
-            <Dropdown>
-              <DropdownSection>
-                <EditOption
-                  title="Edit workout"
-                  onClick={() => navigate(`/app/workouts/update/${workout.id}`)}
-                />
-                <DuplicateOption
-                  title="Duplicate workout"
-                  onClick={() =>
-                    navigate(`/app/workouts/duplicate/${workout.id}`)
-                  }
-                />
-              </DropdownSection>
-              <DropdownSection>
-                <DeleteOption
-                  title="Delete workout"
-                  onClick={() => deleteWorkout(workout.id)}
-                />
-              </DropdownSection>
-            </Dropdown></div>
+              <Dropdown>
+                <DropdownSection>
+                  <EditOption
+                    title="Edit workout"
+                    onClick={() =>
+                      navigate(`/app/workouts/update/${workout.id}`)
+                    }
+                  />
+                  <DuplicateOption
+                    title="Duplicate workout"
+                    onClick={() =>
+                      navigate(`/app/workouts/duplicate/${workout.id}`)
+                    }
+                  />
+                </DropdownSection>
+                <DropdownSection>
+                  <DeleteOption
+                    title="Delete workout"
+                    onClick={() => deleteWorkout(workout.id)}
+                  />
+                </DropdownSection>
+              </Dropdown>
+            </div>
           </div>
         </div>
       </Page.Header>
@@ -178,9 +178,9 @@ const Details = ({ workout }: { workout: Workout }) => {
                     position="center"
                     fill="#FFF"
                     fontSize={
-                      data.muscleGroups.length >= 8
+                      stats.muscleGroups.length >= 8
                         ? 10
-                        : data.muscleGroups.length > 4
+                        : stats.muscleGroups.length > 4
                         ? 12
                         : 16
                     }
@@ -192,9 +192,9 @@ const Details = ({ workout }: { workout: Workout }) => {
                     position="center"
                     fill="#FFF"
                     fontSize={
-                      data.muscleGroups.length >= 8
+                      stats.muscleGroups.length >= 8
                         ? 10
-                        : data.muscleGroups.length > 4
+                        : stats.muscleGroups.length > 4
                         ? 12
                         : 16
                     }
@@ -222,33 +222,33 @@ const Details = ({ workout }: { workout: Workout }) => {
 
             <div className="flex justify-between">
               <p>Exercises</p>
-              <p className="text-gray-500">{data.exerciseCount}</p>
+              <p className="text-gray-500">{stats.exerciseCount}</p>
             </div>
 
             <div className="flex justify-between">
               <p>Sets</p>
-              <p className="text-gray-500">{data.setsCount}</p>
+              <p className="text-gray-500">{stats.setsCount}</p>
             </div>
 
             <div className="flex justify-between">
               <p>Reps</p>
-              <p className="text-gray-500">{data.totalReps}</p>
+              <p className="text-gray-500">{stats.totalReps}</p>
             </div>
 
             <div className="flex justify-between">
               <p>Heaviest Weight</p>
-              <p className="text-gray-500">{data.heaviestWeight} kg</p>
+              <p className="text-gray-500">{stats.heaviestWeight} kg</p>
             </div>
 
             <div className="flex justify-between">
               <p>Total volume</p>
-              <p className="text-gray-500">{data.totalVolume} kg</p>
+              <p className="text-gray-500">{stats.totalVolume} kg</p>
             </div>
 
             <div className="flex justify-between">
               <p>Top Set</p>
               <p className="text-gray-500">
-                {data.topSet.reps} x {data.topSet.weight} kg
+                {stats.topSet.reps} x {stats.topSet.weight} kg
               </p>
             </div>
           </div>

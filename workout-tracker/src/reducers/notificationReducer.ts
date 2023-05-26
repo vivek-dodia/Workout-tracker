@@ -23,7 +23,7 @@ const notificationSlice = createSlice({
   },
 })
 
-const { setMessage, clearMessage } = notificationSlice.actions
+export const { setMessage, clearMessage } = notificationSlice.actions
 
 let timeoutID: number | undefined = undefined
 

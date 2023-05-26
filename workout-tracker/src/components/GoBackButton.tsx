@@ -3,7 +3,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline"
 
 type Props = {
   children?: React.ReactNode
-  to: string
+  to?: string
 }
 
 const GoBackButton = ({ children, to }: Props) => {

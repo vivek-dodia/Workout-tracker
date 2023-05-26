@@ -187,6 +187,26 @@ type IconProps = IconSVGProps & {
 
 export type HeroIcon = React.FC<IconProps>
 
+export interface ExerciseSetRecord {
+  reps: number
+  weight: number
+  volume: number
+}
+
+export interface ExerciseStats {
+  totalSets: number
+  totalReps: number
+  totalVolume: number
+  avgWorkoutSets: number
+  avgWorkoutReps: number
+  avgWorkoutVolume: number
+  bestWorkoutVolume: number
+  bestSetVolume: number
+  heaviestWeight: number
+  bestOrm: number
+  setRecords: ExerciseSetRecord[]
+}
+
 export interface ExerciseGraphData {
   formattedDate: string
   orm: number
@@ -201,7 +221,7 @@ export interface ExerciseGraphData {
 export enum Grouping {
   byWorkout = "byWorkout",
   byWeek = "byWeek",
-  byMonth = "byMonth"
+  byMonth = "byMonth",
 }
 
 export interface GroupingOption {

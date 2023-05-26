@@ -6,6 +6,7 @@ import Dropdown from "../../components/Dropdown"
 import DropdownSection from "../../components/Dropdown/DropdownSection"
 import AddOption from "../../components/Dropdown/AddOption"
 import DeleteOption from "../../components/Dropdown/DeleteOption"
+import DuplicateOption from "../../components/Dropdown/DuplicateOption"
 
 type SetsProps = {
   children: React.ReactNode
@@ -14,6 +15,7 @@ type SetsProps = {
   exerciseType: types.ExerciseType
   sets: types.FormSet[]
   addEmptySetForExercise: (exerciseIndex: number) => void
+  duplicateSet: (exerciseIndex: number, setIndex: number) => void
   removeAllSetsForExercise: (exerciseIndex: number) => void
   updateAllSetsForExercise: (
     exerciseIndex: number,
@@ -33,6 +35,7 @@ const Sets = ({
   exerciseId,
   sets,
   addEmptySetForExercise,
+  duplicateSet,
   removeAllSetsForExercise,
   updateAllSetsForExercise,
   fetchPreviousSet,
@@ -112,6 +115,10 @@ const Sets = ({
                 <AddOption
                   title="Add empty set"
                   onClick={() => addEmptySetForExercise(exerciseIndex)}
+                />
+                <DuplicateOption
+                  title="Duplicate last set"
+                  onClick={() => duplicateSet(exerciseIndex, sets.length - 1)}
                 />
               </DropdownSection>
               <DropdownSection>

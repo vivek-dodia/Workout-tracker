@@ -69,3 +69,12 @@ export const selectWorkoutsSortedByDescDate = createSelector(
     )
   }
 )
+
+export const selectWorkoutsByExerciseId = createSelector(
+  [selectWorkoutsSortedByDescDate, selectId],
+  (workouts: Workout[], id: string): Workout[] => {
+    return workouts.filter((workout) =>
+      workout.exercises.map((exercise) => exercise._exercise.id).includes(id)
+    )
+  }
+)

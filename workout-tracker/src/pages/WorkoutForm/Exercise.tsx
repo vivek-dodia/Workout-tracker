@@ -2,7 +2,7 @@ import { Dispatch } from "react"
 import * as types from "../../types"
 import { CustomChip } from "../Exercises"
 import Button from "../../components/Button"
-import { PlusIcon } from "@heroicons/react/24/outline"
+import { DocumentDuplicateIcon, PlusIcon } from "@heroicons/react/24/outline"
 import Dropdown from "../../components/Dropdown"
 import DropdownSection from "../../components/Dropdown/DropdownSection"
 import MoveUpOption from "../../components/Dropdown/MoveUpOption"
@@ -19,6 +19,7 @@ type ExerciseProps = {
   moveExerciseUp: (exerciseIndex: number) => void
   moveExerciseDown: (exerciseIndex: number) => void
   removeExercise: (exerciseIndex: number) => void
+  duplicateSet: (exerciseIndex: number, setIndex: number) => void
   addEmptySetForExercise: (exerciseIndex: number) => void
   setReplacingExercise: Dispatch<{ active: boolean; exerciseIndex: number }>
   updateExercise: (
@@ -35,6 +36,7 @@ const Exercise = ({
   moveExerciseUp,
   moveExerciseDown,
   removeExercise,
+  duplicateSet,
   addEmptySetForExercise,
   setReplacingExercise,
   updateExercise,
@@ -62,14 +64,23 @@ const Exercise = ({
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="hidden md:block">
+            <div className="hidden md:flex gap-4">
               <Button
-                variant="success"
+                variant="secondary"
                 onClick={() => addEmptySetForExercise(exerciseIndex)}
               >
                 <div className="flex">
                   <PlusIcon className="mr-2 h-5 w-5" />
                   <h3>Add empty set</h3>
+                </div>
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => duplicateSet(exerciseIndex, workoutExercise.sets.length - 1)}
+              >
+                <div className="flex">
+                  <DocumentDuplicateIcon className="mr-2 h-5 w-5" />
+                  <h3>Duplicate last set</h3>
                 </div>
               </Button>
             </div>

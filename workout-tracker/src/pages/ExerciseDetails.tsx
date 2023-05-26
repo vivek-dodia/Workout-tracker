@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, Link } from "react-router-dom"
 
 import {
   LineChart,
@@ -17,6 +17,9 @@ import {
   PencilSquareIcon,
   DocumentDuplicateIcon,
   TrashIcon,
+  ArrowDownIcon,
+  ArrowUpIcon,
+  ArrowLeftIcon,
 } from "@heroicons/react/24/outline"
 
 import Page from "../components/Layout/Page"
@@ -26,7 +29,15 @@ import { useAppDispatch, useAppSelector } from "../hooks"
 import { selectExerciseById } from "../selectors/exerciseSelectors"
 import NoExerciseMatch from "./NoMatch/NoExerciseMatch"
 
-import { Exercise, ExerciseGraphData, Grouping, GroupingOption } from "../types"
+import {
+  Exercise,
+  ExerciseGraphData,
+  ExerciseSetRecord,
+  ExerciseStats,
+  Grouping,
+  GroupingOption,
+  Workout,
+} from "../types"
 import { setHeaderTitle } from "../reducers/headerTitleReducer"
 import { selectUser } from "../selectors/userSelectors"
 import { removeExercise } from "../reducers/exerciseReducer"
@@ -39,14 +50,266 @@ import Button from "../components/Button"
 import YoutubeEmbed from "../components/YoutubeEmbed"
 import { CustomChip } from "./Exercises"
 import { selectExerciseGraphData } from "../selectors/graphDataSelectors"
-import { selectExerciseData } from "../selectors/dataSelectors"
-import { isWithinInterval, parseISO } from "date-fns"
+import { selectExerciseStats } from "../selectors/statsSelectors"
+import { format, isWithinInterval, parseISO } from "date-fns"
 import {
   EXERCISE_DATA_KEY_OPTIONS,
   GROUPING_OPTIONS,
   START_DATE_OPTIONS,
 } from "../utils/const"
 import Select from "../components/Select"
+import { selectWorkoutsByExerciseId } from "../selectors/workoutSelectors"
+
+type HistoryListItemProps = {
+  workout: Workout
+}
+
+const HistoryListItem = ({ workout }: HistoryListItemProps) => {
+  return (
+    <Link
+      key={workout.id}
+      to={`/app/workouts/${workout.id}`}
+      className="flex justify-between py-4 group items-center"
+    >
+      <div className="flex flex-col gap-y-4">
+        <div className="flex gap-x-4 py-1 items-center">
+          <div>
+            <div className="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden bg-gray-100 group-hover:bg-blue-500 rounded-full dark:bg-gray-600">
+              <span className="font-medium text-gray-600 dark:text-gray-300 group-hover:text-white">
+                {workout.name[0]}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-center">
+            <p className="font-semibold text-lg text-gray-800 group-hover:text-black">
+              {workout.name}
+              <span className="ml-2 text-sm font-normal text-gray-500 group-hover:text-gray-600">
+                {format(parseISO(workout.date), "E dd.MM.yy - HH:mm")}
+              </span>
+            </p>
+            <div className="mt-1 flex gap-4 items-center">
+              <p className="text-xs text-gray-500 group-hover:text-gray-600">
+                {workout.exercises
+                  .map((exercise) => exercise._exercise.name)
+                  .join(", ")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <ChevronRightIcon className="h-6 w-6 group-hover:text-blue-500" />
+      </div>
+    </Link>
+  )
+}
+
+type HistoryProps = {
+  workouts: Workout[]
+  showOnlyHistory: boolean
+  setShowOnlyHistory: Dispatch<boolean>
+}
+
+const History = ({
+  workouts,
+  showOnlyHistory,
+  setShowOnlyHistory,
+}: HistoryProps) => {
+  return (
+    <div className="">
+      <div className="px-6 pt-4 border rounded-lg">
+        <h3 className="bg-gray-50 text-lg font-bold">
+          History{" "}
+          <span className="font-normal text-sm">({workouts.length})</span>
+        </h3>
+        <ul className="mt-4 divide-y divide-gray-200">
+          {showOnlyHistory ? (
+            <>
+              {workouts.map((workout) => (
+                <HistoryListItem workout={workout} />
+              ))}
+            </>
+          ) : (
+            <>
+              {workouts.slice(0, 8).map((workout) => (
+                <HistoryListItem workout={workout} />
+              ))}
+            </>
+          )}
+        </ul>
+        {workouts.length > 5 && !showOnlyHistory && (
+          <div className="py-4 flex justify-end">
+            <Button onClick={() => setShowOnlyHistory(!showOnlyHistory)}>
+              <div className="flex items-center gap-2">
+                <h3>See all</h3>
+                <ArrowRightIcon className="h-4 w-4" />
+              </div>
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+type SetRecordsListItemProps = {
+  reps: string
+  weight: string
+  volume: string
+}
+
+const SetRecordsListItem = ({
+  reps,
+  weight,
+  volume,
+}: SetRecordsListItemProps) => {
+  return (
+    <li className="grid grid-cols-3 py-4">
+      <div className="col-span-1">
+        <h3 className="text-blue-500">{reps}</h3>
+      </div>
+      <div className="col-span-1 text-center">
+        <h3 className="text-blue-500">{weight} kg</h3>
+      </div>
+      <div className="col-span-1 text-end">
+        <h3 className="text-blue-500">{volume} kg</h3>
+      </div>
+    </li>
+  )
+}
+
+type SetRecordsProps = {
+  setRecords: ExerciseSetRecord[]
+  showOnlySetRecords: boolean
+  setShowOnlySetRecords: Dispatch<boolean>
+}
+
+const SetRecords = ({
+  setRecords,
+  showOnlySetRecords,
+  setShowOnlySetRecords,
+}: SetRecordsProps) => {
+  if (!setRecords.length) return null
+  return (
+    <div>
+      <div className="bg-white p-4 rounded-lg shadow-md">
+        <h2 className="font-bold text-lg">Set Records</h2>
+
+        <div className="mt-4 grid grid-cols-3 py-4">
+          <div className="col-span-1">
+            <h3 className="font-medium">Reps</h3>
+          </div>
+          <div className="col-span-1 text-center">
+            <h3 className="font-medium">Weight</h3>
+          </div>
+          <div className="col-span-1 text-end">
+            <h3 className="font-medium">Total Volume</h3>
+          </div>
+        </div>
+        <ul className="divide-y divide-gray-200">
+          {showOnlySetRecords ? (
+            <>
+              {setRecords.map((record) => (
+                <SetRecordsListItem
+                  reps={record.reps.toString()}
+                  weight={record.weight.toString()}
+                  volume={record.volume.toString()}
+                />
+              ))}
+            </>
+          ) : (
+            <>
+              {setRecords.slice(0, 5).map((record) => (
+                <SetRecordsListItem
+                  reps={record.reps.toString()}
+                  weight={record.weight.toString()}
+                  volume={record.volume.toString()}
+                />
+              ))}
+            </>
+          )}
+        </ul>
+        {setRecords.length > 5 && !showOnlySetRecords && (
+          <div className="pt-4 flex justify-end">
+            <Button onClick={() => setShowOnlySetRecords(!showOnlySetRecords)}>
+              <div className="flex items-center gap-2">
+                <h3>See all</h3>
+                <ArrowRightIcon className="h-4 w-4" />
+              </div>
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+type StatsListItemProps = {
+  label: string
+  value: string
+}
+
+const StatsListItem = ({ label, value }: StatsListItemProps) => {
+  return (
+    <li className="flex justify-between py-2">
+      <div>
+        <h3 className="font-medium">{label}</h3>
+      </div>
+      <div>
+        <h3 className="font-medium text-blue-500">{value}</h3>
+      </div>
+    </li>
+  )
+}
+
+type StatsProps = {
+  stats: ExerciseStats
+}
+
+const Stats = ({ stats }: StatsProps) => {
+  console.log("stats.heaviestWeight", stats.heaviestWeight)
+  return (
+    <div>
+      <div className="bg-white p-4 rounded-lg shadow-md">
+        <h2 className="font-bold text-lg">Statistics</h2>
+        <ul className="mt-4 divide-gray-200">
+          <StatsListItem
+            label="Heaviest Weight"
+            value={stats.heaviestWeight + " kg"}
+          />
+          <StatsListItem label="Best 1RM" value={stats.bestOrm + " kg"} />
+          <StatsListItem
+            label="Best Set Volume"
+            value={stats.bestSetVolume + " kg"}
+          />
+          <StatsListItem
+            label="Best Workout Volume"
+            value={stats.bestWorkoutVolume + " kg"}
+          />
+          <StatsListItem label="Total Reps" value={stats.totalReps + " reps"} />
+          <StatsListItem label="Total Sets" value={stats.totalSets + " sets"} />
+          <StatsListItem
+            label="Total Volume"
+            value={stats.totalVolume + " kg"}
+          />
+          <StatsListItem
+            label="Average Workout Reps"
+            value={stats.avgWorkoutReps + " reps"}
+          />
+          <StatsListItem
+            label="Average Workout Sets"
+            value={stats.avgWorkoutSets + " sets"}
+          />
+          <StatsListItem
+            label="Average Workout Volume"
+            value={stats.avgWorkoutVolume + " kg"}
+          />
+        </ul>
+      </div>
+    </div>
+  )
+}
 
 type GraphProps = {
   graphData: ExerciseGraphData[]
@@ -64,7 +327,7 @@ const Graph = ({
     EXERCISE_DATA_KEY_OPTIONS[0]
   )
   const [selectedStartDate, setSelectedStartDate] = useState(
-    START_DATE_OPTIONS[0]
+    START_DATE_OPTIONS[2]
   )
 
   const filteredGraphData = useMemo(
@@ -80,9 +343,8 @@ const Graph = ({
 
   return (
     <div>
-      <div className="flex gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Select
-          className="flex-1"
           label="Data"
           value={selectedDataKey}
           options={EXERCISE_DATA_KEY_OPTIONS}
@@ -90,7 +352,6 @@ const Graph = ({
         />
 
         <Select
-          className="flex-1"
           label="Grouped By"
           value={selectedGrouping}
           options={GROUPING_OPTIONS}
@@ -98,7 +359,6 @@ const Graph = ({
         />
 
         <Select
-          className="flex-1"
           label="Interval"
           value={selectedStartDate}
           options={START_DATE_OPTIONS}
@@ -163,17 +423,86 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
   const navigate = useNavigate()
   const user = useAppSelector(selectUser)
   const isCustomExercise = exercise.user === user?.id
-  const data = useAppSelector((state) =>
-    selectExerciseData(state, exercise.id, Grouping.byWorkout)
-  )
   const [selectedGrouping, setSelectedGrouping] = useState(GROUPING_OPTIONS[0])
+  const [showOnlyHistory, setShowOnlyHistory] = useState(false)
+  const [showOnlySetRecords, setShowOnlySetRecords] = useState(false)
+
+  const stats = useAppSelector((state) =>
+    selectExerciseStats(state, exercise.id, Grouping.byWorkout)
+  )
   const graphData = useAppSelector((state) =>
     selectExerciseGraphData(state, exercise.id, selectedGrouping.value)
   )
+  const workouts = useAppSelector((state) =>
+    selectWorkoutsByExerciseId(state, exercise.id)
+  )
 
   useEffect(() => {
-    dispatch(setHeaderTitle(exercise.name))
-  }, [])
+    document.querySelector("main")?.scrollTo(0, 0)
+
+    const title = showOnlySetRecords
+      ? "Set Records"
+      : showOnlyHistory
+      ? "History for " + exercise.name
+      : exercise.name
+    dispatch(setHeaderTitle(title))
+  }, [showOnlyHistory, showOnlySetRecords])
+
+  if (showOnlyHistory)
+    return (
+      <Page>
+        <Page.Header>
+          <div className="flex h-full items-center justify-between py-4 container px-6 mx-auto">
+            <div>
+              <button
+                className="flex gap-2 items-center"
+                onClick={() => setShowOnlyHistory(false)}
+              >
+                <ArrowLeftIcon className="h-5 w-5" />
+                <h4 className="font-semibold text-gray-600">{exercise.name}</h4>
+              </button>
+            </div>
+          </div>
+        </Page.Header>
+        <Page.Content>
+          <div className="mt-8">
+            <History
+              workouts={workouts}
+              showOnlyHistory={showOnlyHistory}
+              setShowOnlyHistory={setShowOnlyHistory}
+            />
+          </div>
+        </Page.Content>
+      </Page>
+    )
+
+  if (showOnlySetRecords)
+    return (
+      <Page>
+        <Page.Header>
+          <div className="flex h-full items-center justify-between py-4 container px-6 mx-auto">
+            <div>
+              <button
+                className="flex gap-2 items-center"
+                onClick={() => setShowOnlySetRecords(false)}
+              >
+                <ArrowLeftIcon className="h-5 w-5" />
+                <h4 className="font-semibold text-gray-600">{exercise.name}</h4>
+              </button>
+            </div>
+          </div>
+        </Page.Header>
+        <Page.Content>
+          <div className="mt-8">
+            <SetRecords
+              setRecords={stats.setRecords}
+              showOnlySetRecords={showOnlySetRecords}
+              setShowOnlySetRecords={setShowOnlySetRecords}
+            />
+          </div>
+        </Page.Content>
+      </Page>
+    )
 
   return (
     <Page>
@@ -256,20 +585,20 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
 
       <Page.Content>
         <div>
-          <div className="mt-8 grid grid-cols-2 gap-4">
+          <div className="mt-8 grid grid-cols-2 gap-12">
             {!!exercise.videoId && (
-              <div className="flex flex-col gap-4">
+              <div className="col-span-2 xl:col-span-1 flex flex-col gap-4">
                 <YoutubeEmbed embedId={exercise.videoId} />
               </div>
             )}
-            <div className="flex flex-col px-6">
+            <div className="col-span-2 xl:col-span-1 flex flex-col ">
               <div className="flex flex-col">
                 <h1 className="font-bold text-lg">{exercise.name}</h1>
                 <div className="flex gap-4 items-center">
                   <p className="text-sm text-gray-500">
                     Muscle Groups: {exercise.muscleGroups.join(", ")}
                   </p>
-                  {exercise.user === user?.id && <CustomChip />}
+                  {isCustomExercise && <CustomChip />}
                 </div>
               </div>
               <div className="mt-4">
@@ -298,7 +627,7 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
               </div>
             </div>
 
-            <div className="col-span-2 mt-8 bg-white p-4 rounded-lg shadow-md">
+            <div className="col-span-2 bg-white p-4 rounded-lg shadow-md">
               <Graph
                 graphData={graphData}
                 selectedGrouping={selectedGrouping}
@@ -306,149 +635,22 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
               />
             </div>
 
-            <div>
-              <div className="mt-8 px-4">
-                <h2 className="font-bold text-lg">Personal Records</h2>
-                <ul className="mt-4 divide-y divide-gray-200">
-                  <li className="flex justify-between py-4">
-                    <div>
-                      <h3 className="font-medium">Heaviest Weight</h3>
-                    </div>
-                    <div>
-                      <h3 className="text-blue-500">100 kg</h3>
-                    </div>
-                  </li>
-                  <li className="flex justify-between py-4">
-                    <div>
-                      <h3 className="font-medium">Best 1RM</h3>
-                    </div>
-                    <div>
-                      <h3 className="text-blue-500">120.5 kg</h3>
-                    </div>
-                  </li>
-                  <li className="flex justify-between py-4">
-                    <div>
-                      <h3 className="font-medium">Best Set Volume</h3>
-                    </div>
-                    <div>
-                      <h3 className="text-blue-500">3000 kg</h3>
-                    </div>
-                  </li>
-                  <li className="flex justify-between py-4">
-                    <div>
-                      <h3 className="font-medium">Best Session Volume</h3>
-                    </div>
-                    <div>
-                      <h3 className="text-blue-500">9000 kg</h3>
-                    </div>
-                  </li>
-                </ul>
-              </div>
+            <div className="col-span-2 lg:col-span-1 grid gap-12">
+              <Stats stats={stats} />
 
-              <div className="mt-8 px-4">
-                <h2 className="font-bold text-lg">Set Records</h2>
-                <li className="mt-4 grid grid-cols-10 py-4">
-                  <div className="col-span-2">
-                    <h3 className="font-medium">Reps</h3>
-                  </div>
-                  <div className="col-span-8">
-                    <h3 className="font-medium">Weight</h3>
-                  </div>
-                </li>
-                <ul className="divide-y divide-gray-200">
-                  <li className="grid grid-cols-10 py-4">
-                    <div className="col-span-2">
-                      <h3 className="">3</h3>
-                    </div>
-                    <div className="col-span-8">
-                      <h3 className="text-blue-500">50 kg</h3>
-                    </div>
-                  </li>
-                  <li className="grid grid-cols-10 py-4">
-                    <div className="col-span-2">
-                      <h3 className="">5</h3>
-                    </div>
-                    <div className="col-span-8">
-                      <h3 className="text-blue-500">50 kg</h3>
-                    </div>
-                  </li>
-                  <li className="grid grid-cols-10 py-4">
-                    <div className="col-span-2">
-                      <h3 className="">8</h3>
-                    </div>
-                    <div className="col-span-8">
-                      <h3 className="text-blue-500">60 kg</h3>
-                    </div>
-                  </li>
-                  <li className="grid grid-cols-10 py-4">
-                    <div className="col-span-2">
-                      <h3 className="">10</h3>
-                    </div>
-                    <div className="col-span-8">
-                      <h3 className="text-blue-500">50 kg</h3>
-                    </div>
-                  </li>
-                </ul>
-              </div>
+              <SetRecords
+                setRecords={stats.setRecords}
+                showOnlySetRecords={showOnlySetRecords}
+                setShowOnlySetRecords={setShowOnlySetRecords}
+              />
             </div>
 
-            <div className="">
-              <div className="mt-8 ml-12 px-6 pt-4 border rounded-lg">
-                <h3 className="bg-gray-50 text-lg font-bold">History</h3>
-                <ul className="mt-4 divide-y divide-gray-200">
-                  <li className="py-6 flex justify-between items-center">
-                    <div className="flex flex-col">
-                      <h3 className="font-medium">Entry</h3>
-                      <p className="text-sm text-gray-500">
-                        {new Date().toISOString()}
-                      </p>
-                    </div>
-                    <ChevronRightIcon className="h-4 w-4" />
-                  </li>
-                  <li className="py-6 flex justify-between items-center">
-                    <div className="flex flex-col">
-                      <h3 className="font-medium">Entry</h3>
-                      <p className="text-sm text-gray-500">
-                        {new Date().toISOString()}
-                      </p>
-                    </div>
-                    <ChevronRightIcon className="h-4 w-4" />
-                  </li>
-                  <li className="py-6 flex justify-between items-center">
-                    <div className="flex flex-col">
-                      <h3 className="font-medium">Entry</h3>
-                      <p className="text-sm text-gray-500">
-                        {new Date().toISOString()}
-                      </p>
-                    </div>
-                    <ChevronRightIcon className="h-4 w-4" />
-                  </li>
-                  <li className="py-6 flex justify-between items-center">
-                    <div className="flex flex-col">
-                      <h3 className="font-medium">Entry</h3>
-                      <p className="text-sm text-gray-500">
-                        {new Date().toISOString()}
-                      </p>
-                    </div>
-                    <ChevronRightIcon className="h-4 w-4" />
-                  </li>
-                  <li className="py-6 flex justify-between items-center">
-                    <div className="flex flex-col">
-                      <h3 className="font-medium">Entry</h3>
-                      <p className="text-sm text-gray-500">
-                        {new Date().toISOString()}
-                      </p>
-                    </div>
-                    <ChevronRightIcon className="h-4 w-4" />
-                  </li>
-                  <div className="py-6 flex justify-end">
-                    <div className="flex items-center gap-2 text-blue-500">
-                      <h3>See more</h3>
-                      <ArrowRightIcon className="h-4 w-4" />
-                    </div>
-                  </div>
-                </ul>
-              </div>
+            <div className="col-span-2 lg:col-span-1">
+              <History
+                workouts={workouts}
+                showOnlyHistory={showOnlyHistory}
+                setShowOnlyHistory={setShowOnlyHistory}
+              />
             </div>
           </div>
         </div>

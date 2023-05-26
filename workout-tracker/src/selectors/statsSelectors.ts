@@ -1,10 +1,15 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { selectWorkoutById } from "./workoutSelectors"
-import { Workout } from "../types"
+import {
+  ExerciseGraphData,
+  ExerciseStats,
+  SetWithData,
+  Workout,
+} from "../types"
 import { selectExerciseGraphData } from "./graphDataSelectors"
 import { selectSetsWithDataByExerciseIdSortedByAscDate } from "./setSelectors"
 
-export const selectWorkoutData = createSelector(
+export const selectWorkoutStats = createSelector(
   [selectWorkoutById],
   (workout) => {
     const w = workout as Workout
@@ -48,10 +53,16 @@ export const selectWorkoutData = createSelector(
   }
 )
 
-export const selectExerciseData = createSelector(
-  [selectExerciseGraphData, selectSetsWithDataByExerciseIdSortedByAscDate],
-  (graphData, setsWithData) => {
+const parseNumber = (value: number): number => {
+  return isFinite(value) ? value : 0
+}
 
+export const selectExerciseStats = createSelector(
+  [selectExerciseGraphData, selectSetsWithDataByExerciseIdSortedByAscDate],
+  (
+    graphData: ExerciseGraphData[],
+    setsWithData: SetWithData[]
+  ): ExerciseStats => {
     const dataPoints: number = graphData.length
 
     const sets = graphData.map((dataPoint) => dataPoint.sets)
@@ -63,18 +74,18 @@ export const selectExerciseData = createSelector(
     const orms = graphData.map((dataPoint) => dataPoint.orm)
     const topSetVolumes = graphData.map((dataPoint) => dataPoint.topSetVolume)
 
-    const totalSets = sets.reduce((a, b) => a + b, 0)
-    const totalReps = reps.reduce((a, b) => a + b, 0)
-    const totalVolume = volumes.reduce((a, b) => a + b, 0)
+    const totalSets = parseNumber(sets.reduce((a, b) => a + b, 0))
+    const totalReps = parseNumber(reps.reduce((a, b) => a + b, 0))
+    const totalVolume = parseNumber(volumes.reduce((a, b) => a + b, 0))
 
-    const bestWorkoutVolume = Math.max(...volumes)
-    const bestSetVolume = Math.max(...topSetVolumes)
-    const bestOrm = Math.max(...orms)
-    const heaviestWeight = Math.max(...heaviestWeights)
+    const bestWorkoutVolume = parseNumber(Math.max(...volumes))
+    const bestSetVolume = parseNumber(Math.max(...topSetVolumes))
+    const bestOrm = parseNumber(Math.max(...orms))
+    const heaviestWeight = parseNumber(Math.max(...heaviestWeights))
 
-    const avgWorkoutVolume = +(totalVolume / dataPoints).toFixed(2)
-    const avgWorkoutReps = +(totalReps / dataPoints).toFixed(2)
-    const avgWorkoutSets = +(totalSets / dataPoints).toFixed(2)
+    const avgWorkoutVolume = parseNumber(+(totalVolume / dataPoints).toFixed(2))
+    const avgWorkoutReps = parseNumber(+(totalReps / dataPoints).toFixed(2))
+    const avgWorkoutSets = parseNumber(+(totalSets / dataPoints).toFixed(2))
 
     const setRecords = setsWithData
       .reduce((acc, cur) => {
