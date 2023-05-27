@@ -253,9 +253,9 @@ const Exercises = ({ asPicker }: Props) => {
                 )}
               </div>
             )}
-            <div className="grid grid-cols-9 gap-4 items-center">
+            <div className="flex-col sm:flex-row flex gap-4 items-center">
               <SearchBar
-                className={!asPicker ? "col-span-8" : "col-span-full"}
+                className="flex-1"
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 placeholder="Search exercises..."
@@ -263,7 +263,7 @@ const Exercises = ({ asPicker }: Props) => {
               {!asPicker && (
                 <Link
                   to="/app/exercises/new"
-                  className="bg-green-500 hover:bg-green-700 rounded-md p-2 text-white flex items-center justify-center"
+                  className="bg-green-500 hover:bg-green-700 rounded-md p-2 text-white"
                 >
                   <h3>Add Exercise</h3>
                 </Link>

@@ -36,6 +36,7 @@ import {
   ExerciseStats,
   Grouping,
   GroupingOption,
+  NotificationType,
   Workout,
 } from "../types"
 import { setHeaderTitle } from "../reducers/headerTitleReducer"
@@ -59,6 +60,8 @@ import {
 } from "../utils/const"
 import Select from "../components/Select"
 import { selectWorkoutsByExerciseId } from "../selectors/workoutSelectors"
+import Spinner from "../components/Spinner"
+import useNotify from "../hooks/useNotify"
 
 type HistoryListItemProps = {
   workout: Workout
@@ -421,11 +424,13 @@ const Graph = ({
 const Details = ({ exercise }: { exercise: Exercise }) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const { notify } = useNotify()
   const user = useAppSelector(selectUser)
   const isCustomExercise = exercise.user === user?.id
   const [selectedGrouping, setSelectedGrouping] = useState(GROUPING_OPTIONS[0])
   const [showOnlyHistory, setShowOnlyHistory] = useState(false)
   const [showOnlySetRecords, setShowOnlySetRecords] = useState(false)
+  const [buttonLoading, setButtonLoading] = useState(false)
 
   const stats = useAppSelector((state) =>
     selectExerciseStats(state, exercise.id, Grouping.byWorkout)
@@ -447,6 +452,16 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
       : exercise.name
     dispatch(setHeaderTitle(title))
   }, [showOnlyHistory, showOnlySetRecords])
+
+  const deleteExercise = (id: string) => {
+    setButtonLoading(true)
+    dispatch(removeExercise(id))
+      .then(() => navigate(`/app/exercises`))
+      .catch(() => {
+        notify("Something went wrong", NotificationType.alert)
+      })
+      .finally(() => setButtonLoading(false))
+  }
 
   if (showOnlyHistory)
     return (
@@ -542,10 +557,14 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
               {isCustomExercise && (
                 <Button
                   variant="alert"
-                  onClick={() => dispatch(removeExercise(exercise.id))}
+                  onClick={() => deleteExercise(exercise.id)}
                 >
-                  <div className="flex">
-                    <TrashIcon className="mr-2 h-5 w-5" />
+                  <div className="flex gap-2">
+                    {buttonLoading ? (
+                      <Spinner />
+                    ) : (
+                      <TrashIcon className="h-5 w-5" />
+                    )}
                     <h3>Delete exercise</h3>
                   </div>
                 </Button>

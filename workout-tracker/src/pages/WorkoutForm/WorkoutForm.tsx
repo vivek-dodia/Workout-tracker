@@ -25,6 +25,8 @@ import { setHeaderTitle } from "../../reducers/headerTitleReducer"
 import Exercise from "./Exercise"
 import Sets from "./Sets"
 import Set from "./Set"
+import useNotify from "../../hooks/useNotify"
+import Spinner from "../../components/Spinner"
 
 type WorkoutFormProps = {
   updating?: boolean
@@ -42,7 +44,9 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
   const user = useAppSelector(selectUser)!
   const [startTime, setStartTime] = useState(Date.now())
   const { fetchPreviousSet } = useFetchPreviousSet()
+  const { notify } = useNotify()
   const [loading, setLoading] = useState(true)
+  const [buttonLoading, setButtonLoading] = useState(false)
   const [selectingExercises, setSelectingExercises] = useState(false)
   const [replacingExercise, setReplacingExercise] = useState({
     active: false,
@@ -398,13 +402,21 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
     const newWorkout = parseWorkout()
 
     if (updating && selectedWorkout && id && user) {
-      dispatch(updateWorkout({ id, user: user.id, ...newWorkout })).then(
-        ({ id }) => navigate(`/app/workouts/${id}`)
-      )
+      setButtonLoading(true)
+      dispatch(updateWorkout({ id, user: user.id, ...newWorkout }))
+        .then(({ id }) => navigate(`/app/workouts/${id}`))
+        .catch(() => {
+          notify("Something went wrong", types.NotificationType.alert)
+        })
+        .finally(() => setButtonLoading(false))
     } else {
-      dispatch(createWorkout(newWorkout)).then(({ id }) =>
-        navigate(`/app/workouts/${id}`)
-      )
+      setButtonLoading(true)
+      dispatch(createWorkout(newWorkout))
+        .then(({ id }) => navigate(`/app/workouts/${id}`))
+        .catch(() => {
+          notify("Something went wrong", types.NotificationType.alert)
+        })
+        .finally(() => setButtonLoading(false))
     }
   }
 
@@ -427,6 +439,7 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
   if (finishingWorkout)
     return (
       <WorkoutFinish
+        buttonLoading={buttonLoading}
         workout={workout}
         setWorkout={setWorkout}
         setFinishingWorkout={setFinishingWorkout}
@@ -451,7 +464,10 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
             <div>
               {updating ? (
                 <Button variant="success" onClick={submitWorkout}>
-                  Update Workout
+                  <div className="flex gap-2 items-center">
+                    {buttonLoading && <Spinner />}
+                    <h3>Update Workout</h3>
+                  </div>
                 </Button>
               ) : (
                 <Button variant="tertiary" onClick={finishWorkout}>
@@ -555,7 +571,7 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
                   Clear exercises
                 </Button>
               </div>
-              <div className="col-start-2 col-span-2 flex gap-4">
+              {/* <div className="col-start-2 col-span-2 flex gap-4">
                 <Button
                   className="flex-1"
                   variant="neutral"
@@ -563,7 +579,7 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
                 >
                   Settings
                 </Button>
-              </div>
+              </div> */}
             </div>
           )}
         </div>

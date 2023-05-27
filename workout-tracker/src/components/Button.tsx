@@ -1,5 +1,4 @@
 import { classNames } from "../utils/fn"
-import Spinner from "./Spinner"
 
 type Variant =
   | "primary"
@@ -31,6 +30,7 @@ const Button = ({
   children,
   className = "",
 }: Props) => {
+
   return (
     <button
       type="button"

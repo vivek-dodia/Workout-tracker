@@ -9,6 +9,7 @@ import TextArea from "../../components/TextArea"
 import DateTimePicker from "../../components/DateTimePicker"
 import { format, parseISO } from "date-fns"
 import { REGEX_INT } from "../../utils/const"
+import Spinner from "../../components/Spinner"
 
 type WorkoutFinishInputsProps = {
   workout: FormWorkout
@@ -71,6 +72,7 @@ export const WorkoutFinishInputs = ({
 
 type Props = {
   workout: FormWorkout
+  buttonLoading: boolean
   setFinishingWorkout: React.Dispatch<boolean>
   setWorkout: React.Dispatch<FormWorkout>
   submitWorkout: () => void
@@ -78,6 +80,7 @@ type Props = {
 
 const WorkoutFinish = ({
   workout,
+  buttonLoading,
   setFinishingWorkout,
   setWorkout,
   submitWorkout,
@@ -103,7 +106,10 @@ const WorkoutFinish = ({
 
             <div>
               <Button variant="success" onClick={submitWorkout}>
-                Save Workout
+                <div className="flex gap-2 items-center">
+                  {buttonLoading && <Spinner />}
+                  <h3>Save Workout</h3>
+                </div>
               </Button>
             </div>
           </div>

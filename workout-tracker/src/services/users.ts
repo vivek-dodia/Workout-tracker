@@ -6,7 +6,7 @@ const baseUrl = import.meta.env.VITE_BASE_URL + "users"
 const create = async (
   objectToCreate: User
 ): Promise<User> => {
-  const { data } = await axios.post<User>(baseUrl, objectToCreate, { timeout: 10000 })
+  const { data } = await axios.post<User>(baseUrl, objectToCreate)
   return data
 }
 
@@ -14,12 +14,12 @@ const update = async (
   id: string,
   objectToUpdate: User
 ): Promise<User> => {
-  const { data } = await axios.put<User>(`${baseUrl}/${id}`, objectToUpdate, { timeout: 10000 })
+  const { data } = await axios.put<User>(`${baseUrl}/${id}`, objectToUpdate)
   return data
 }
 
 const remove = async (id: string): Promise<User> => {
-  const { data } = await axios.delete<User>(`${baseUrl}/${id}`, { timeout: 10000 })
+  const { data } = await axios.delete<User>(`${baseUrl}/${id}`)
   return data
 }
 

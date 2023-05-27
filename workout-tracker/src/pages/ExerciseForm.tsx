@@ -21,6 +21,8 @@ import useNotify from "../hooks/useNotify"
 import { createExercise, updateExercise } from "../reducers/exerciseReducer"
 import { selectFormExerciseById } from "../selectors/exerciseSelectors"
 import { selectUser } from "../selectors/userSelectors"
+import Loading from "../components/Loading"
+import Spinner from "../components/Spinner"
 
 type ExerciseFormProps = {
   updating?: boolean
@@ -38,6 +40,8 @@ const ExerciseForm = ({ updating, duplicating }: ExerciseFormProps) => {
   )
   const { notify } = useNotify()
   const [exercise, setExercise] = useState<types.FormExercise>(EMPTY_EXERCISE)
+  const [buttonLoading, setButtonLoading] = useState(false)
+
   const unauthorized =
     updating && selectedExercise && user && selectedExercise.user !== user.id
 
@@ -114,19 +118,21 @@ const ExerciseForm = ({ updating, duplicating }: ExerciseFormProps) => {
     }
 
     if (updating && selectedExercise && id && user) {
+      setButtonLoading(true)
       dispatch(updateExercise({ id, user: user.id, ...exerciseToCreate }))
         .then(({ id }) => navigate(`/app/exercises/${id}`))
-        .catch((err) => {
-          notify(
-            err.response.data.error as string,
-            types.NotificationType.alert
-          )
-          navigate(`/app/exercises`)
+        .catch(() => {
+          notify("Something went wrong", types.NotificationType.alert)
         })
+        .finally(() => setButtonLoading(false))
     } else {
-      dispatch(createExercise(exerciseToCreate)).then(({ id }) =>
-        navigate(`/app/exercises/${id}`)
-      )
+      setButtonLoading(true)
+      dispatch(createExercise(exerciseToCreate))
+        .then(({ id }) => navigate(`/app/exercises/${id}`))
+        .catch(() => {
+          notify("Something went wrong", types.NotificationType.alert)
+        })
+        .finally(() => setButtonLoading(false))
     }
   }
 
@@ -145,7 +151,10 @@ const ExerciseForm = ({ updating, duplicating }: ExerciseFormProps) => {
 
             <div>
               <Button variant="success" onClick={submitExercise}>
-                {updating ? "Update Exercise" : "Save Exercise"}
+                <div className="flex gap-2 items-center">
+                  {buttonLoading && <Spinner />}
+                  <h3>{updating ? "Update Exercise" : "Save Exercise"}</h3>
+                </div>
               </Button>
             </div>
           </div>
