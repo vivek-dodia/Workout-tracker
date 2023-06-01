@@ -9,6 +9,13 @@ export const selectId = createSelector(
   }
 )
 
+export const selectGrouping = createSelector(
+  [(_state: RootState, grouping: Grouping): Grouping => grouping],
+  (grouping: Grouping): Grouping => {
+    return grouping
+  }
+)
+
 export const selectIdAndGrouping = createSelector(
   [(_state: RootState, _id: string, grouping: Grouping): Grouping => grouping],
   (grouping: Grouping): Grouping => {

@@ -74,12 +74,6 @@ export const initializeWorkouts = () => {
   return async (dispatch: AppDispatch): Promise<Workout[]> => {
     const workouts = await workoutService.getAll()
     dispatch(_initializeWorkouts(workouts))
-    dispatch(
-      setNotification({
-        message: "Initialized Workouts",
-        type: NotificationType.success,
-      })
-    )
     return workouts
   }
 }

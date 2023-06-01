@@ -21,7 +21,6 @@ import useNotify from "../hooks/useNotify"
 import { createExercise, updateExercise } from "../reducers/exerciseReducer"
 import { selectFormExerciseById } from "../selectors/exerciseSelectors"
 import { selectUser } from "../selectors/userSelectors"
-import Loading from "../components/Loading"
 import Spinner from "../components/Spinner"
 
 type ExerciseFormProps = {

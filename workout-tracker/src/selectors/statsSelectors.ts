@@ -6,8 +6,12 @@ import {
   SetWithData,
   Workout,
 } from "../types"
-import { selectExerciseGraphData } from "./graphDataSelectors"
-import { selectSetsWithDataByExerciseIdSortedByAscDate } from "./setSelectors"
+import {
+  selectExerciseGraphData,
+  selectOverallGraphData,
+  selectWorkoutsGraphData,
+} from "./graphDataSelectors"
+import { selectSetsWithDataByExerciseId } from "./setSelectors"
 
 export const selectWorkoutStats = createSelector(
   [selectWorkoutById],
@@ -58,11 +62,13 @@ const parseNumber = (value: number): number => {
 }
 
 export const selectExerciseStats = createSelector(
-  [selectExerciseGraphData, selectSetsWithDataByExerciseIdSortedByAscDate],
+  [selectExerciseGraphData, selectSetsWithDataByExerciseId],
   (
     graphData: ExerciseGraphData[],
     setsWithData: SetWithData[]
   ): ExerciseStats => {
+    const start = performance.now()
+
     const dataPoints: number = graphData.length
 
     const sets = graphData.map((dataPoint) => dataPoint.sets)
@@ -109,7 +115,8 @@ export const selectExerciseStats = createSelector(
         return acc
       }, [] as { reps: number; weight: number; volume: number }[])
       .sort((a, b) => a.reps - b.reps)
-
+    const end = performance.now()
+    console.log(`Execution time: ${end - start} ms`)
     return {
       totalSets,
       totalReps,
@@ -122,6 +129,52 @@ export const selectExerciseStats = createSelector(
       heaviestWeight,
       bestOrm,
       setRecords,
+    }
+  }
+)
+
+export const selectOverallStats = createSelector(
+  [selectOverallGraphData, selectWorkoutsGraphData],
+  (overallGraphData, workoutsGraphData) => {
+    const start = performance.now()
+    const dataPoints: number = overallGraphData.length
+
+    const sets = overallGraphData.map((dataPoint) => dataPoint.sets)
+    const reps = overallGraphData.map((dataPoint) => dataPoint.reps)
+    const volumes = overallGraphData.map((dataPoint) => dataPoint.volume)
+    const durations = workoutsGraphData.map(
+      (dataPoint) => dataPoint.totalDuration
+    )
+
+    const totalSets = parseNumber(sets.reduce((a, b) => a + b, 0))
+    const totalReps = parseNumber(reps.reduce((a, b) => a + b, 0))
+    const totalVolume = parseNumber(volumes.reduce((a, b) => a + b, 0))
+    const totalDuration = parseNumber(durations.reduce((a, b) => a + b, 0))
+
+    const bestWorkoutVolume = parseNumber(Math.max(...volumes))
+    const bestWorkoutSets = parseNumber(Math.max(...sets))
+
+    const avgWorkoutVolume = parseNumber(+(totalVolume / dataPoints).toFixed(2))
+    const avgWorkoutReps = parseNumber(+(totalReps / dataPoints).toFixed(2))
+    const avgWorkoutSets = parseNumber(+(totalSets / dataPoints).toFixed(2))
+    const avgWorkoutDuration = parseNumber(
+      +(totalDuration / dataPoints).toFixed(2)
+    )
+
+    const end = performance.now()
+    console.log(`Execution time: ${end - start} ms`)
+    return {
+      workoutCount: dataPoints,
+      totalSets,
+      totalReps,
+      totalVolume,
+      totalDuration,
+      avgWorkoutSets,
+      avgWorkoutReps,
+      avgWorkoutVolume,
+      avgWorkoutDuration,
+      bestWorkoutVolume,
+      bestWorkoutSets,
     }
   }
 )

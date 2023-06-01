@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       height: {
@@ -18,11 +15,10 @@ export default {
         page: "4rem 0 0 16rem",
       },
       gridTemplateColumns: {
-        // Simple 16 column grid
         20: "repeat(20, minmax(0, 1fr))",
+        auto: "repeat(auto-fit, minmax(200px, auto))", 
       },
     },
   },
   plugins: [],
 }
-

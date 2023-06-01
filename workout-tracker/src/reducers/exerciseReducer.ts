@@ -56,12 +56,6 @@ export const initializeExercises = () => {
   return async (dispatch: AppDispatch): Promise<Exercise[]> => {
     const exercises = await exerciseService.getAll()
     dispatch(_initializeExercises(exercises))
-    dispatch(
-      setNotification({
-        message: "Initialized Exercises",
-        type: NotificationType.success,
-      })
-    )
     return exercises
   }
 }

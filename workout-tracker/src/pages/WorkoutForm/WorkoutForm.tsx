@@ -346,7 +346,9 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
           sets: exercise.sets.map((set) => ({
             ...set,
             status:
-              !set.reps || !set.weight ? types.SetStatusType.error : set.status,
+              !set.reps || !set.weight || parseFloat(set.reps) <= 0
+                ? types.SetStatusType.error
+                : set.status,
           })),
         })),
       ],
@@ -361,7 +363,7 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
 
     const sets = workout.exercises.map((exercise) => exercise.sets).flat()
     const hasValidRepsAndWeight = sets.every(
-      (set) => !!set.reps && !!set.weight
+      (set) => !!set.reps && !!set.weight && parseFloat(set.reps) > 0
     )
 
     if (!hasValidRepsAndWeight) {

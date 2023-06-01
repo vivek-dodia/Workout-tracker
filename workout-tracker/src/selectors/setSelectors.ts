@@ -24,6 +24,13 @@ export const selectSetsWithData = createSelector(
   }
 )
 
+export const selectSetsWithDataByExerciseId = createSelector(
+  [selectSetsWithData, selectId],
+  (sets: SetWithData[], id: string): SetWithData[] => {
+    return sets.filter((set) => set.exerciseId === id)
+  }
+)
+
 export const selectSetsWithDataSortedByDescDate = createSelector(
   [selectSetsWithData],
   (sets: SetWithData[]): SetWithData[] => {
@@ -36,9 +43,14 @@ export const selectSetsWithDataSortedByDescDate = createSelector(
 export const selectSetsWithDataSortedByAscDate = createSelector(
   [selectSetsWithData],
   (sets: SetWithData[]): SetWithData[] => {
-    return [...sets].sort((a, b) =>
+    const start = performance.now()
+
+    const res = [...sets].sort((a, b) =>
       compareAsc(parseISO(a.date), parseISO(b.date))
     )
+    const end = performance.now()
+    console.log(`Execution time: ${end - start} ms`)
+    return res
   }
 )
 

@@ -10,17 +10,18 @@ import workoutReducer from "./reducers/workoutReducer"
 
 const store = configureStore({
   reducer: {
-   user: userReducer,
-   notification: notificationReducer,
-   sidebar: sidebarReducer,
-   headerTitle: headerTitleReducer,
-   exercises: exerciseReducer,
-   workouts: workoutReducer,
+    user: userReducer,
+    notification: notificationReducer,
+    sidebar: sidebarReducer,
+    headerTitle: headerTitleReducer,
+    exercises: exerciseReducer,
+    workouts: workoutReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    immutableCheck: { warnAfter: 128 },
-    serializableCheck: { warnAfter: 128 },
-  })
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: { warnAfter: 128 },
+      serializableCheck: { warnAfter: 128 },
+    }),
 })
 
 injectStoreForAxios(store)

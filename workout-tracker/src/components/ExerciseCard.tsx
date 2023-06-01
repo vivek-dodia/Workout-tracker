@@ -21,18 +21,18 @@ const ExerciseCard = ({ exercise, user }: ExerciseCardProps) => {
             </div>
 
             <div className="flex flex-col justify-center">
-              <p className="font-semibold">{exercise._exercise.name}</p>
               <div className="mt-1 flex gap-4 items-center">
-                <p className="text-sm text-gray-600">
-                  {exercise._exercise.muscleGroups.join(", ")} |{" "}
-                  {exercise.sets.length} sets | Total volume{" "}
-                  {exercise.sets
-                    .map((set) => set.reps * set.actualWeight)
-                    .reduce((a, b) => a + b, 0)}{" "}
-                  kg
-                </p>
+                <p className="font-semibold">{exercise._exercise.name}</p>
                 {exercise._exercise.user === user?.id && <CustomChip />}
               </div>
+              <p className="text-sm text-gray-600">
+                {exercise._exercise.muscleGroups.join(", ")} |{" "}
+                {exercise.sets.length} sets | Total volume{" "}
+                {exercise.sets
+                  .map((set) => set.reps * set.actualWeight)
+                  .reduce((a, b) => a + b, 0)}{" "}
+                kg
+              </p>
             </div>
           </div>
         </div>

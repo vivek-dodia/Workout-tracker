@@ -17,9 +17,7 @@ type HeaderProps = {
 
 const Header = ({ children }: HeaderProps) => {
   return (
-    <div className={classNames("bg-gray-50 z-20 sticky top-0")}>
-      {children}
-    </div>
+    <div className={classNames("bg-gray-50 z-20 sticky top-0")}>{children}</div>
   )
 }
 

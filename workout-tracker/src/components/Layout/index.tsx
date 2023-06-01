@@ -8,13 +8,13 @@ import Routes from "./Routes"
 import Loading from "../Loading"
 
 const Layout = () => {
-  const { initializeState, loading } = useStateInitialization()
+  const { initializeState, loading, loadingText } = useStateInitialization()
 
   useEffect(() => {
     initializeState()
   }, [])
 
-  if (loading) return <Loading />
+  if (loading) return <Loading loadingText={loadingText} />
 
   return (
     <div className={`flex h-screen w-full bg-gray-50 dark:bg-gray-900`}>

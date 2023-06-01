@@ -50,8 +50,14 @@ export const EXERCISE_DATA_KEY_OPTIONS: StringOption[] = [
   { label: "Sets", value: "sets" },
 ]
 
+export const OVERALL_DATA_KEY_OPTIONS: StringOption[] = [
+  { label: "Volume", value: "volume" },
+  { label: "Reps", value: "reps" },
+  { label: "Sets", value: "sets" },
+]
+
 export const GROUPING_OPTIONS: GroupingOption[] = [
-  { label: "Workout", value: Grouping.byWorkout },
+  { label: "Date", value: Grouping.byDate },
   { label: "Week", value: Grouping.byWeek },
   { label: "Month", value: Grouping.byMonth },
 ]

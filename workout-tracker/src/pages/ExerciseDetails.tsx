@@ -62,6 +62,8 @@ import Select from "../components/Select"
 import { selectWorkoutsByExerciseId } from "../selectors/workoutSelectors"
 import Spinner from "../components/Spinner"
 import useNotify from "../hooks/useNotify"
+import StatCard from "../components/StatCard"
+import LinkButton from "../components/LinkButton"
 
 type HistoryListItemProps = {
   workout: Workout
@@ -101,7 +103,7 @@ const HistoryListItem = ({ workout }: HistoryListItemProps) => {
           </div>
         </div>
       </div>
-      <div>
+      <div className="">
         <ChevronRightIcon className="h-6 w-6 group-hover:text-blue-500" />
       </div>
     </Link>
@@ -114,11 +116,7 @@ type HistoryProps = {
   setShowOnlyHistory: Dispatch<boolean>
 }
 
-const History = ({
-  workouts,
-  showOnlyHistory,
-  setShowOnlyHistory,
-}: HistoryProps) => {
+const History = ({ workouts }: HistoryProps) => {
   return (
     <div className="">
       <div className="px-6 pt-4 border rounded-lg">
@@ -126,31 +124,11 @@ const History = ({
           History{" "}
           <span className="font-normal text-sm">({workouts.length})</span>
         </h3>
-        <ul className="mt-4 divide-y divide-gray-200">
-          {showOnlyHistory ? (
-            <>
-              {workouts.map((workout) => (
-                <HistoryListItem workout={workout} />
-              ))}
-            </>
-          ) : (
-            <>
-              {workouts.slice(0, 8).map((workout) => (
-                <HistoryListItem workout={workout} />
-              ))}
-            </>
-          )}
+        <ul className="mt-4 divide-y h-96 divide-gray-200 overflow-y-auto">
+          {workouts.map((workout) => (
+            <HistoryListItem workout={workout} />
+          ))}
         </ul>
-        {workouts.length > 5 && !showOnlyHistory && (
-          <div className="py-4 flex justify-end">
-            <Button onClick={() => setShowOnlyHistory(!showOnlyHistory)}>
-              <div className="flex items-center gap-2">
-                <h3>See all</h3>
-                <ArrowRightIcon className="h-4 w-4" />
-              </div>
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   )
@@ -271,7 +249,6 @@ type StatsProps = {
 }
 
 const Stats = ({ stats }: StatsProps) => {
-  console.log("stats.heaviestWeight", stats.heaviestWeight)
   return (
     <div>
       <div className="bg-white p-4 rounded-lg shadow-md">
@@ -428,12 +405,10 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
   const user = useAppSelector(selectUser)
   const isCustomExercise = exercise.user === user?.id
   const [selectedGrouping, setSelectedGrouping] = useState(GROUPING_OPTIONS[0])
-  const [showOnlyHistory, setShowOnlyHistory] = useState(false)
-  const [showOnlySetRecords, setShowOnlySetRecords] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
 
   const stats = useAppSelector((state) =>
-    selectExerciseStats(state, exercise.id, Grouping.byWorkout)
+    selectExerciseStats(state, exercise.id, Grouping.byDate)
   )
   const graphData = useAppSelector((state) =>
     selectExerciseGraphData(state, exercise.id, selectedGrouping.value)
@@ -443,15 +418,8 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
   )
 
   useEffect(() => {
-    document.querySelector("main")?.scrollTo(0, 0)
-
-    const title = showOnlySetRecords
-      ? "Set Records"
-      : showOnlyHistory
-      ? "History for " + exercise.name
-      : exercise.name
-    dispatch(setHeaderTitle(title))
-  }, [showOnlyHistory, showOnlySetRecords])
+    dispatch(setHeaderTitle(exercise.name))
+  }, [])
 
   const deleteExercise = (id: string) => {
     setButtonLoading(true)
@@ -463,62 +431,6 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
       .finally(() => setButtonLoading(false))
   }
 
-  if (showOnlyHistory)
-    return (
-      <Page>
-        <Page.Header>
-          <div className="flex h-full items-center justify-between py-4 container px-6 mx-auto">
-            <div>
-              <button
-                className="flex gap-2 items-center"
-                onClick={() => setShowOnlyHistory(false)}
-              >
-                <ArrowLeftIcon className="h-5 w-5" />
-                <h4 className="font-semibold text-gray-600">{exercise.name}</h4>
-              </button>
-            </div>
-          </div>
-        </Page.Header>
-        <Page.Content>
-          <div className="mt-8">
-            <History
-              workouts={workouts}
-              showOnlyHistory={showOnlyHistory}
-              setShowOnlyHistory={setShowOnlyHistory}
-            />
-          </div>
-        </Page.Content>
-      </Page>
-    )
-
-  if (showOnlySetRecords)
-    return (
-      <Page>
-        <Page.Header>
-          <div className="flex h-full items-center justify-between py-4 container px-6 mx-auto">
-            <div>
-              <button
-                className="flex gap-2 items-center"
-                onClick={() => setShowOnlySetRecords(false)}
-              >
-                <ArrowLeftIcon className="h-5 w-5" />
-                <h4 className="font-semibold text-gray-600">{exercise.name}</h4>
-              </button>
-            </div>
-          </div>
-        </Page.Header>
-        <Page.Content>
-          <div className="mt-8">
-            <SetRecords
-              setRecords={stats.setRecords}
-              showOnlySetRecords={showOnlySetRecords}
-              setShowOnlySetRecords={setShowOnlySetRecords}
-            />
-          </div>
-        </Page.Content>
-      </Page>
-    )
-
   return (
     <Page>
       <Page.Header>
@@ -529,30 +441,26 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
           <div className="flex items-center gap-4">
             <div className="hidden lg:flex gap-2">
               {isCustomExercise && (
-                <Button
+                <LinkButton
                   variant="secondary"
-                  onClick={() =>
-                    navigate(`/app/exercises/update/${exercise.id}`)
-                  }
+                  to={`/app/exercises/update/${exercise.id}`}
                 >
                   <div className="flex">
                     <PencilSquareIcon className="mr-2 h-5 w-5" />
                     <h3>Edit exercise</h3>
                   </div>
-                </Button>
+                </LinkButton>
               )}
 
-              <Button
+              <LinkButton
                 variant="secondary"
-                onClick={() =>
-                  navigate(`/app/exercises/duplicate/${exercise.id}`)
-                }
+                to={`/app/exercises/duplicate/${exercise.id}`}
               >
                 <div className="flex">
                   <DocumentDuplicateIcon className="mr-2 h-5 w-5" />
                   <h3>Duplicate exercise</h3>
                 </div>
-              </Button>
+              </LinkButton>
 
               {isCustomExercise && (
                 <Button
@@ -603,74 +511,90 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
       </Page.Header>
 
       <Page.Content>
-        <div>
-          <div className="mt-8 grid grid-cols-2 gap-12">
-            {!!exercise.videoId && (
-              <div className="col-span-2 xl:col-span-1 flex flex-col gap-4">
-                <YoutubeEmbed embedId={exercise.videoId} />
-              </div>
-            )}
-            <div className="col-span-2 xl:col-span-1 flex flex-col ">
-              <div className="flex flex-col">
-                <h1 className="font-bold text-lg">{exercise.name}</h1>
-                <div className="flex gap-4 items-center">
-                  <p className="text-sm text-gray-500">
-                    Muscle Groups: {exercise.muscleGroups.join(", ")}
-                  </p>
-                  {isCustomExercise && <CustomChip />}
-                </div>
-              </div>
-              <div className="mt-4">
-                <ol className="list-decimal pl-4 space-y-2 text-sm">
-                  <li className="pl-2">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Etiam eu hendrerit libero.
-                  </li>
-                  <li className="pl-2">
-                    Donec suscipit sit amet augue vitae ultricies.
-                  </li>
-                  <li className="pl-2">
-                    Etiam porttitor lacinia nibh, eu lobortis odio egestas sed.
-                    Mauris molestie quis turpis eget iaculis.
-                  </li>
-                  <li className="pl-2">
-                    Proin id turpis lacus. Proin orci enim, mollis non mi a,
-                    ornare posuere tortor. Ut sed libero lobortis, sodales risus
-                    a, laoreet ante. Nullam ut purus feugiat urna vehicula
-                    faucibus ac eget turpis.
-                  </li>
-                  <li className="pl-2">
-                    Sed in urna mattis, rhoncus augue sed, aliquet dui.
-                  </li>
-                </ol>
-              </div>
+        <div className="mt-8 grid grid-cols-1 gap-y-8">
+          {/* TITLE */}
+          <div>
+            <div className="flex gap-4 items-center">
+              <h1 className="font-bold text-3xl">{exercise.name}</h1>
+              {isCustomExercise && <CustomChip />}
             </div>
+            <p className="mt-1 text-gray-500">
+              Muscle Groups: {exercise.muscleGroups.join(", ")}
+            </p>
+          </div>
 
-            <div className="col-span-2 bg-white p-4 rounded-lg shadow-md">
-              <Graph
-                graphData={graphData}
-                selectedGrouping={selectedGrouping}
-                setSelectedGrouping={setSelectedGrouping}
-              />
+          {/* VIDEO? */}
+          {!!exercise.videoId && (
+            <div className="max-w-screen-md w-full">
+              <YoutubeEmbed embedId={exercise.videoId} />
             </div>
+          )}
 
-            <div className="col-span-2 lg:col-span-1 grid gap-12">
-              <Stats stats={stats} />
+          {/* STATS */}
+          <div className="grid grid-cols-auto gap-4">
+            <StatCard
+              label="Heaviest Weight"
+              value={stats.heaviestWeight + " kg"}
+            />
+            <StatCard label="Best 1RM" value={stats.bestOrm + " kg"} />
+            <StatCard
+              label="Best Set Volume"
+              value={stats.bestSetVolume + " kg"}
+            />
+            <StatCard
+              label="Best Workout Volume"
+              value={stats.bestWorkoutVolume + " kg"}
+            />
+            <StatCard label="Total Reps" value={stats.totalReps + " reps"} />
+            <StatCard label="Total volume" value={stats.totalVolume + "kg"} />
+            <StatCard label="Total Sets" value={stats.totalSets + " sets"} />
+            <StatCard
+              label="Average Workout Reps"
+              value={stats.avgWorkoutReps + " reps"}
+            />
+            <StatCard
+              label="Average Workout Sets"
+              value={stats.avgWorkoutSets + " sets"}
+            />
+            <StatCard
+              label="Average Workout Volume"
+              value={stats.avgWorkoutVolume + " kg"}
+            />
+          </div>
 
-              <SetRecords
-                setRecords={stats.setRecords}
-                showOnlySetRecords={showOnlySetRecords}
-                setShowOnlySetRecords={setShowOnlySetRecords}
-              />
+          {/* GRAPH */}
+          <div className="bg-white px-4 py-6 rounded-lg shadow-md">
+            <Graph
+              graphData={graphData}
+              selectedGrouping={selectedGrouping}
+              setSelectedGrouping={setSelectedGrouping}
+            />
+          </div>
+
+          {/* SET RECORDS */}
+          <div>
+            <h2 className="font-bold text-lg">Set Records</h2>
+            <div className="mt-8 grid grid-cols-auto gap-4">
+              {stats.setRecords.map((record) => (
+                <StatCard
+                  label={record.reps + " x " + record.weight + " kg"}
+                  value={record.volume + " kg"}
+                />
+              ))}
             </div>
+          </div>
 
-            <div className="col-span-2 lg:col-span-1">
-              <History
-                workouts={workouts}
-                showOnlyHistory={showOnlyHistory}
-                setShowOnlyHistory={setShowOnlyHistory}
-              />
-            </div>
+          {/* HISTORY */}
+          <div className="px-4 py-6 border rounded-lg">
+            <h3 className="bg-gray-50 text-lg font-bold">
+              History{" "}
+              <span className="font-normal text-sm">({workouts.length})</span>
+            </h3>
+            <ul className="mt-4 divide-y pr-2 max-h-[500px] divide-gray-200 overflow-y-auto">
+              {workouts.map((workout) => (
+                <HistoryListItem workout={workout} />
+              ))}
+            </ul>
           </div>
         </div>
       </Page.Content>

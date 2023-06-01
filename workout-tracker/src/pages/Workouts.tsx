@@ -9,6 +9,7 @@ import { ChevronRightIcon } from "@heroicons/react/24/outline"
 import { format, parseISO } from "date-fns"
 import { useInView } from "react-intersection-observer"
 import Button from "../components/Button"
+import LinkButton from "../components/LinkButton"
 
 const Workouts = () => {
   const dispatch = useAppDispatch()
@@ -58,19 +59,12 @@ const Workouts = () => {
                 </div>
 
                 <div className="flex flex-col justify-center">
-                  <p className="font-semibold text-lg text-gray-800 group-hover:text-black">
+                  <p className="font-semibold text-gray-800 group-hover:text-black">
                     {workout.name}
-                    <span className="ml-2 text-sm font-normal text-gray-500 group-hover:text-gray-600">
-                      {format(parseISO(workout.date), "E dd.MM.yy - HH:mm")}
-                    </span>
                   </p>
-                  <div className="mt-1 flex gap-4 items-center">
-                    <p className="text-xs text-gray-500 group-hover:text-gray-600">
-                      {workout.exercises
-                        .map((exercise) => exercise._exercise.name)
-                        .join(", ")}
-                    </p>
-                  </div>
+                  <p className="mt-1 text-sm text-gray-500 group-hover:text-gray-600">
+                    {format(parseISO(workout.date), "E dd.MM.yy")}
+                  </p>
                 </div>
               </div>
             </div>
@@ -100,12 +94,12 @@ const Workouts = () => {
               setSearchQuery={setSearchQuery}
               placeholder="Search workouts..."
             />
-            <Button
+            <LinkButton
               variant="success"
-              onClick={() => navigate("/app/workouts/new")}
+              to="/app/workouts/new"
             >
               Add workout
-            </Button>
+            </LinkButton>
           </div>
         </div>
       </Page.Header>

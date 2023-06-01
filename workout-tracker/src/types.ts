@@ -180,6 +180,7 @@ export interface SortOption {
 
 type IconSVGProps = React.PropsWithoutRef<React.SVGProps<SVGSVGElement>> &
   React.RefAttributes<SVGSVGElement>
+
 type IconProps = IconSVGProps & {
   title?: string
   titleId?: string
@@ -218,8 +219,16 @@ export interface ExerciseGraphData {
   totalReps: number
 }
 
+export interface OverallGraphData {
+  formattedDate: string
+  date: string
+  sets: number
+  volume: number
+  reps: number
+}
+
 export enum Grouping {
-  byWorkout = "byWorkout",
+  byDate = "byDate",
   byWeek = "byWeek",
   byMonth = "byMonth",
 }

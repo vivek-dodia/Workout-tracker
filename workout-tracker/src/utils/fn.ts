@@ -1,7 +1,21 @@
-import { ExerciseGraphData, ExerciseType, ExerciseTypeOption, Grouping, SetWithData } from "../types"
+import {
+  ExerciseGraphData,
+  ExerciseType,
+  ExerciseTypeOption,
+  Grouping,
+  SetWithData,
+} from "../types"
 import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore"
 import { RootState } from "../store"
-import { isSameISOWeek, isSameMonth, parseISO, startOfISOWeek, startOfMonth } from "date-fns"
+import {
+  format,
+  isSameISOWeek,
+  isSameMonth,
+  parse,
+  parseISO,
+  startOfISOWeek,
+  startOfMonth,
+} from "date-fns"
 
 let store: ToolkitStore
 
@@ -81,20 +95,27 @@ export const getExerciseTypeOption = (
 // 1RM = w / [1.0278 - (0.0278 * r)]
 // accurate for <= 10 reps
 export const brzycki1RM = (r: number, w: number): number => {
-  return w / (1.0278 - 0.0278 * r)
+  return +(w / (1.0278 - 0.0278 * r)).toFixed(2)
 }
-
 // Epley 1RM formula
 // 1RM = w * (1 + (0.0333 * r))
 // Better than Brzycki for > 10 reps
 export const epley1RM = (r: number, w: number): number => {
-  return w * (1 + 0.0333 * r)
+  return +(w * (1 + 0.0333 * r)).toFixed(2)
 }
 
 export const oneRepMax = (r: number, w: number) => {
   const reps = r
   const weight = w
   return reps > 10 ? epley1RM(reps, weight) : brzycki1RM(reps, weight)
+}
+
+export const formatDate = (date: Date): string => {
+  return format(date, "dd.MM.yy")
+}
+
+export const formatStrDate = (date: string): string => {
+  return format(parseISO(date), "dd.MM.yy")
 }
 
 export const getIndexAndDate = (
@@ -106,7 +127,7 @@ export const getIndexAndDate = (
   date: string
 } => {
   switch (grouping) {
-    case Grouping.byWorkout:
+    case Grouping.byDate:
       return {
         index: acc.findIndex((obj) =>
           !obj.date ? false : obj.date === cur.date
@@ -138,5 +159,18 @@ export const getIndexAndDate = (
         ),
         date: cur.date,
       }
+  }
+}
+
+export const getDateByGrouping = (date: string, grouping: Grouping): string => {
+  switch (grouping) {
+    case Grouping.byDate:
+      return date
+    case Grouping.byWeek:
+      return startOfISOWeek(parseISO(date)).toISOString()
+    case Grouping.byMonth:
+      return startOfMonth(parseISO(date)).toISOString()
+    default:
+      return date
   }
 }

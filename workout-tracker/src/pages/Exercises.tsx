@@ -18,6 +18,7 @@ import { Exercise, FormWorkoutExercise } from "../types"
 import { classNames } from "../utils/fn"
 import Button from "../components/Button"
 import { useInView } from "react-intersection-observer"
+import LinkButton from "../components/LinkButton"
 
 export const CustomChip = () => {
   return (
@@ -43,33 +44,34 @@ export const ExerciseListItem = ({
   const user = useAppSelector(selectUser)
   return (
     <>
-      <div className="flex gap-x-4 py-1">
-        <div
-          className={classNames(
-            "relative inline-flex items-center justify-center w-12 h-12 overflow-hidden group-hover:bg-blue-500 rounded-full dark:bg-gray-600",
-            isSelected ? "bg-blue-500" : "bg-gray-100"
-          )}
-        >
-          <span
+      <div className="flex gap-x-4 py-1 items-center">
+        <div>
+          <div
             className={classNames(
-              "font-medium dark:text-gray-300 group-hover:text-white",
-              isSelected ? "text-white" : "text-gray-600"
+              "relative inline-flex items-center justify-center w-12 h-12 overflow-hidden group-hover:bg-blue-500 rounded-full dark:bg-gray-600",
+              isSelected ? "bg-blue-500" : "bg-gray-100"
             )}
           >
-            {exercise.name[0]}
-          </span>
+            <span
+              className={classNames(
+                "font-medium dark:text-gray-300 group-hover:text-white",
+                isSelected ? "text-white" : "text-gray-600"
+              )}
+            >
+              {exercise.name[0]}
+            </span>
+          </div>
         </div>
-
         <div className="flex flex-col justify-center">
-          <p className="font-semibold text-gray-800 group-hover:text-black">
-            {exercise.name}
-          </p>
-          <div className="mt-1 flex gap-4 items-center">
-            <p className="text-sm text-gray-500 group-hover:text-gray-600">
-              {exercise.muscleGroups.join(", ")}
+          <div className="flex gap-4 items-center">
+            <p className="font-semibold text-gray-800 group-hover:text-black">
+              {exercise.name}
             </p>
             {exercise.user === user?.id && <CustomChip />}
           </div>
+          <p className="mt-1 text-sm text-gray-500 group-hover:text-gray-600">
+            {exercise.muscleGroups.join(", ")}
+          </p>
         </div>
       </div>
 
@@ -97,7 +99,7 @@ type Props = {
     replacingExercise: {
       active: boolean
       exerciseIndex: number
-    }
+    } 
     selectedCount: number
   }
 }
@@ -261,12 +263,9 @@ const Exercises = ({ asPicker }: Props) => {
                 placeholder="Search exercises..."
               />
               {!asPicker && (
-                <Link
-                  to="/app/exercises/new"
-                  className="bg-green-500 hover:bg-green-700 rounded-md p-2 text-white"
-                >
-                  <h3>Add Exercise</h3>
-                </Link>
+                <LinkButton variant="success" to="/app/exercises/new">
+                  Add Exercise
+                </LinkButton>
               )}
             </div>
           </div>
