@@ -14,7 +14,6 @@ import { clearHeaderTitle } from "../../reducers/headerTitleReducer"
 import { toggleSidebar } from "../../reducers/sidebarReducer"
 
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
   { name: "Settings", href: "/app/account" },
 ]
 

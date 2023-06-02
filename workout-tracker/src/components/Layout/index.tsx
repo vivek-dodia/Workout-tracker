@@ -6,13 +6,18 @@ import Sidebar from "./Sidebar"
 import Header from "./Header"
 import Routes from "./Routes"
 import Loading from "../Loading"
+import { useAppSelector } from "../../hooks"
+import { selectUser } from "../../selectors/userSelectors"
 
 const Layout = () => {
+  const user = useAppSelector(selectUser)
   const { initializeState, loading, loadingText } = useStateInitialization()
 
   useEffect(() => {
-    initializeState()
+    if (user) initializeState()
   }, [])
+
+  if (!user) return null
 
   if (loading) return <Loading loadingText={loadingText} />
 

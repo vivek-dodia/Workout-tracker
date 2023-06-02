@@ -58,6 +58,11 @@ export enum MuscleGroup {
   abs = "Abs",
 }
 
+export interface NumberOption {
+  label: string
+  value: number
+}
+
 export interface StringOption {
   label: string
   value: string

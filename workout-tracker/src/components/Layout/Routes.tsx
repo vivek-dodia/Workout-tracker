@@ -10,6 +10,7 @@ import WorkoutForm from "../../pages/WorkoutForm/WorkoutForm"
 import Account from "../../pages/Account"
 import ExerciseForm from "../../pages/ExerciseForm"
 import Analytics from "../../pages/Analytics"
+import Calculators from "../../pages/Calculators"
 
 const Routes = () => {
   return (
@@ -23,6 +24,9 @@ const Routes = () => {
         </Route>
         <Route path="/account">
           <Route index element={<Account />} />
+        </Route>
+        <Route path="/calculators">
+          <Route index element={<Calculators />} />
         </Route>
         <Route path="/exercises">
           <Route index element={<Exercises />} />

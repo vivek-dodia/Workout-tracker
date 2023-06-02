@@ -41,7 +41,6 @@ import { formatDate } from "../utils/fn"
 import { selectOverallStats } from "../selectors/statsSelectors"
 import { Grouping } from "../types"
 import StatCard from "../components/StatCard"
-import Breadcrumbs from "../components/Breadcrums"
 import LinkButton from "../components/LinkButton"
 
 export const DurationAndWorkoutsGraph = ({

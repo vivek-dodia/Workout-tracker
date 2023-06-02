@@ -7,6 +7,7 @@ import {
   ExerciseTypeOption,
   DateOption,
   StringOption,
+  NumberOption,
 } from "../types"
 
 type SelectProps<T> = {
@@ -18,7 +19,7 @@ type SelectProps<T> = {
 }
 
 const Select = <
-  T extends StringOption | DateOption | EquipmentOption | ExerciseTypeOption
+  T extends StringOption | NumberOption | DateOption | EquipmentOption | ExerciseTypeOption
 >({
   value,
   label,

@@ -15,6 +15,7 @@ import {
   StringOption,
   GroupingOption,
   Grouping,
+  NumberOption,
 } from "../types"
 
 import { getExerciseTypeOption } from "./fn"
@@ -48,6 +49,11 @@ export const EXERCISE_DATA_KEY_OPTIONS: StringOption[] = [
   { label: "Top Set Volume", value: "topSetVolume" },
   { label: "Total Reps", value: "totalReps" },
   { label: "Sets", value: "sets" },
+]
+
+export const CALCULATOR_OPTIONS: NumberOption[] = [
+  { label: "One Rep Max", value: 0 },
+  { label: "Warmup (Main Lifts)", value: 1 },
 ]
 
 export const OVERALL_DATA_KEY_OPTIONS: StringOption[] = [
@@ -89,3 +95,4 @@ export const EMPTY_WORKOUT: FormWorkout = {
 export const REGEX_DECIMAL = /^-?\d+\.?\d*$/
 export const REGEX_INT = /^(?!0{2,})\d+$/
 export const REGEX_INT_0_TO_100 = /^(?:100|[1-9]\d|\d)$/
+export const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/ // /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i

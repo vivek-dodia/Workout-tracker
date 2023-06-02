@@ -14,21 +14,21 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser(_, { payload }: PayloadAction<User>): User {
+    _setUser(_, { payload }: PayloadAction<User>): User {
       return payload
     },
-    removeUser(): UserState {
+    _removeUser(): UserState {
       return null
     },
   },
 })
 
-const { setUser, removeUser } = userSlice.actions
+const { _setUser, _removeUser } = userSlice.actions
 
 export const initUser = () => {
   return (dispatch: AppDispatch): void => {
     const userFromStorage = storageService.loadUser()
-    if (userFromStorage) dispatch(setUser(userFromStorage))
+    if (userFromStorage) dispatch(_setUser(userFromStorage))
   }
 }
 
@@ -37,7 +37,7 @@ export const signIn = (credentials: Credentials) => {
     const { email, password } = credentials
     const user = await signInService.signIn({ email, password })
     storageService.saveUser(user)
-    dispatch(setUser(user))
+    dispatch(_setUser(user))
     return user.username
   }
 }
@@ -45,7 +45,7 @@ export const signIn = (credentials: Credentials) => {
 export const signOut = () => {
   return async (dispatch: AppDispatch): Promise<void> => {
     storageService.removeUser()
-    dispatch(removeUser())
+    dispatch(_removeUser())
   }
 }
 
@@ -53,7 +53,16 @@ export const updateUser = (userToUpdate: User) => {
   return async (dispatch: AppDispatch): Promise<void> => {
     const newUser = await userService.update(userToUpdate.id, userToUpdate)
     storageService.saveUser(newUser)
-    dispatch(setUser(newUser))
+    dispatch(_setUser(newUser))
+  }
+}
+
+export const removeUser = (id: string) => {
+  return async (dispatch: AppDispatch): Promise<User> => {
+    const removedUser = await userService.remove(id)
+    storageService.removeUser()
+    dispatch(_removeUser())
+    return removedUser
   }
 }
 

@@ -107,6 +107,7 @@ export const epley1RM = (r: number, w: number): number => {
 export const oneRepMax = (r: number, w: number) => {
   const reps = r
   const weight = w
+  if (reps <= 0 || weight <= 0) return 0
   return reps > 10 ? epley1RM(reps, weight) : brzycki1RM(reps, weight)
 }
 

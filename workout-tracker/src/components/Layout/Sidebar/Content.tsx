@@ -70,6 +70,11 @@ const mainPaths: NavItem[] = [
     href: "calculators",
   },
   {
+    title: "Account",
+    Icon: MdPerson2,
+    href: "account",
+  },
+  {
     title: "Settings",
     Icon: HiCog,
     href: "settings",
