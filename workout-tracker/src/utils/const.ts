@@ -53,7 +53,7 @@ export const EXERCISE_DATA_KEY_OPTIONS: StringOption[] = [
 
 export const CALCULATOR_OPTIONS: NumberOption[] = [
   { label: "One Rep Max", value: 0 },
-  { label: "Warmup (Main Lifts)", value: 1 },
+  { label: "Warmup Sets (Main Lifts)", value: 1 },
 ]
 
 export const OVERALL_DATA_KEY_OPTIONS: StringOption[] = [

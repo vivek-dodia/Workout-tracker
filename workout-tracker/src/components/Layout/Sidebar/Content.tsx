@@ -74,11 +74,6 @@ const mainPaths: NavItem[] = [
     Icon: MdPerson2,
     href: "account",
   },
-  {
-    title: "Settings",
-    Icon: HiCog,
-    href: "settings",
-  },
 ]
 
 const paths: NavItem[] = [

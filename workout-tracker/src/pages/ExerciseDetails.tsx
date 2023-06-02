@@ -69,7 +69,7 @@ type HistoryListItemProps = {
   workout: Workout
 }
 
-const HistoryListItem = ({ workout }: HistoryListItemProps) => {
+export const HistoryListItem = ({ workout }: HistoryListItemProps) => {
   return (
     <Link
       key={workout.id}
@@ -107,187 +107,6 @@ const HistoryListItem = ({ workout }: HistoryListItemProps) => {
         <ChevronRightIcon className="h-6 w-6 group-hover:text-blue-500" />
       </div>
     </Link>
-  )
-}
-
-type HistoryProps = {
-  workouts: Workout[]
-  showOnlyHistory: boolean
-  setShowOnlyHistory: Dispatch<boolean>
-}
-
-const History = ({ workouts }: HistoryProps) => {
-  return (
-    <div className="">
-      <div className="px-6 pt-4 border rounded-lg">
-        <h3 className="bg-gray-50 text-lg font-bold">
-          History{" "}
-          <span className="font-normal text-sm">({workouts.length})</span>
-        </h3>
-        <ul className="mt-4 divide-y h-96 divide-gray-200 overflow-y-auto">
-          {workouts.map((workout) => (
-            <HistoryListItem workout={workout} />
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
-}
-
-type SetRecordsListItemProps = {
-  reps: string
-  weight: string
-  volume: string
-}
-
-const SetRecordsListItem = ({
-  reps,
-  weight,
-  volume,
-}: SetRecordsListItemProps) => {
-  return (
-    <li className="grid grid-cols-3 py-4">
-      <div className="col-span-1">
-        <h3 className="text-blue-500">{reps}</h3>
-      </div>
-      <div className="col-span-1 text-center">
-        <h3 className="text-blue-500">{weight} kg</h3>
-      </div>
-      <div className="col-span-1 text-end">
-        <h3 className="text-blue-500">{volume} kg</h3>
-      </div>
-    </li>
-  )
-}
-
-type SetRecordsProps = {
-  setRecords: ExerciseSetRecord[]
-  showOnlySetRecords: boolean
-  setShowOnlySetRecords: Dispatch<boolean>
-}
-
-const SetRecords = ({
-  setRecords,
-  showOnlySetRecords,
-  setShowOnlySetRecords,
-}: SetRecordsProps) => {
-  if (!setRecords.length) return null
-  return (
-    <div>
-      <div className="bg-white p-4 rounded-lg shadow-md">
-        <h2 className="font-bold text-lg">Set Records</h2>
-
-        <div className="mt-4 grid grid-cols-3 py-4">
-          <div className="col-span-1">
-            <h3 className="font-medium">Reps</h3>
-          </div>
-          <div className="col-span-1 text-center">
-            <h3 className="font-medium">Weight</h3>
-          </div>
-          <div className="col-span-1 text-end">
-            <h3 className="font-medium">Total Volume</h3>
-          </div>
-        </div>
-        <ul className="divide-y divide-gray-200">
-          {showOnlySetRecords ? (
-            <>
-              {setRecords.map((record) => (
-                <SetRecordsListItem
-                  reps={record.reps.toString()}
-                  weight={record.weight.toString()}
-                  volume={record.volume.toString()}
-                />
-              ))}
-            </>
-          ) : (
-            <>
-              {setRecords.slice(0, 5).map((record) => (
-                <SetRecordsListItem
-                  reps={record.reps.toString()}
-                  weight={record.weight.toString()}
-                  volume={record.volume.toString()}
-                />
-              ))}
-            </>
-          )}
-        </ul>
-        {setRecords.length > 5 && !showOnlySetRecords && (
-          <div className="pt-4 flex justify-end">
-            <Button onClick={() => setShowOnlySetRecords(!showOnlySetRecords)}>
-              <div className="flex items-center gap-2">
-                <h3>See all</h3>
-                <ArrowRightIcon className="h-4 w-4" />
-              </div>
-            </Button>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-type StatsListItemProps = {
-  label: string
-  value: string
-}
-
-const StatsListItem = ({ label, value }: StatsListItemProps) => {
-  return (
-    <li className="flex justify-between py-2">
-      <div>
-        <h3 className="font-medium">{label}</h3>
-      </div>
-      <div>
-        <h3 className="font-medium text-blue-500">{value}</h3>
-      </div>
-    </li>
-  )
-}
-
-type StatsProps = {
-  stats: ExerciseStats
-}
-
-const Stats = ({ stats }: StatsProps) => {
-  return (
-    <div>
-      <div className="bg-white p-4 rounded-lg shadow-md">
-        <h2 className="font-bold text-lg">Statistics</h2>
-        <ul className="mt-4 divide-gray-200">
-          <StatsListItem
-            label="Heaviest Weight"
-            value={stats.heaviestWeight + " kg"}
-          />
-          <StatsListItem label="Best 1RM" value={stats.bestOrm + " kg"} />
-          <StatsListItem
-            label="Best Set Volume"
-            value={stats.bestSetVolume + " kg"}
-          />
-          <StatsListItem
-            label="Best Workout Volume"
-            value={stats.bestWorkoutVolume + " kg"}
-          />
-          <StatsListItem label="Total Reps" value={stats.totalReps + " reps"} />
-          <StatsListItem label="Total Sets" value={stats.totalSets + " sets"} />
-          <StatsListItem
-            label="Total Volume"
-            value={stats.totalVolume + " kg"}
-          />
-          <StatsListItem
-            label="Average Workout Reps"
-            value={stats.avgWorkoutReps + " reps"}
-          />
-          <StatsListItem
-            label="Average Workout Sets"
-            value={stats.avgWorkoutSets + " sets"}
-          />
-          <StatsListItem
-            label="Average Workout Volume"
-            value={stats.avgWorkoutVolume + " kg"}
-          />
-        </ul>
-      </div>
-    </div>
   )
 }
 
@@ -574,14 +393,20 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
           {/* SET RECORDS */}
           <div>
             <h2 className="font-bold text-lg">Set Records</h2>
-            <div className="mt-8 grid grid-cols-auto gap-4">
-              {stats.setRecords.map((record) => (
-                <StatCard
-                  label={record.reps + " x " + record.weight + " kg"}
-                  value={record.volume + " kg"}
-                />
-              ))}
-            </div>
+            {!stats.setRecords.length ? (
+              <div>
+                <h3>No set records found</h3>
+              </div>
+            ) : (
+              <div className="mt-8 grid grid-cols-auto gap-4">
+                {stats.setRecords.map((record) => (
+                  <StatCard
+                    label={record.reps + " x " + record.weight + " kg"}
+                    value={record.volume + " kg"}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* HISTORY */}
@@ -590,11 +415,17 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
               History{" "}
               <span className="font-normal text-sm">({workouts.length})</span>
             </h3>
-            <ul className="mt-4 divide-y pr-2 max-h-[500px] divide-gray-200 overflow-y-auto">
-              {workouts.map((workout) => (
-                <HistoryListItem workout={workout} />
-              ))}
-            </ul>
+            {!workouts.length ? (
+              <div>
+                <h3>No workouts found</h3>
+              </div>
+            ) : (
+              <ul className="mt-4 divide-y pr-2 max-h-[500px] divide-gray-200 overflow-y-auto">
+                {workouts.map((workout) => (
+                  <HistoryListItem workout={workout} />
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </Page.Content>

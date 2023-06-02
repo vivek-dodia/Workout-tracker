@@ -9,7 +9,7 @@ import {
 } from "../utils/const"
 import { format, isWithinInterval, parseISO } from "date-fns"
 import Select from "../components/Select"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import Button from "../components/Button"
 import {
   CartesianGrid,
@@ -42,6 +42,7 @@ import { selectOverallStats } from "../selectors/statsSelectors"
 import { Grouping } from "../types"
 import StatCard from "../components/StatCard"
 import LinkButton from "../components/LinkButton"
+import { selectWorkouts } from "../selectors/workoutSelectors"
 
 export const DurationAndWorkoutsGraph = ({
   onDashboard,
@@ -80,16 +81,39 @@ export const DurationAndWorkoutsGraph = ({
       )}
 
       {onDashboard && (
-        <div className="flex justify-between">
-          <h2 className="">
-            {formatDate(selectedStartDate.value)} - {formatDate(new Date())}
-          </h2>
+        <div className="flex justify-between items-center">
+          <h2 className="font-semibold">Last month grouped by week</h2>
           <LinkButton to="/app/analytics">
             <div className="flex items-center gap-2">
               <h3>Analytics</h3>
               <ArrowRightIcon className="h-4 w-4" />
             </div>
           </LinkButton>
+        </div>
+      )}
+
+      {!filteredGraphData.length && (
+        <div className="my-8 flex flex-col justify-center items-center gap-4">
+          <div className="">
+            <h3 className="font-medium">
+              No graph data to show.{" "}
+              {!graphData.length ? "Get to work!" : "Try changing variables."}
+            </h3>
+            {!!graphData.length && (
+              <h4 className="text-sm text-gray-500">
+                This usually means you have selected shorter interval than
+                grouping.
+              </h4>
+            )}
+          </div>
+          {!graphData.length && (
+            <Button
+              variant="success"
+              onClick={() => navigate("/app/workouts/new")}
+            >
+              Add workout
+            </Button>
+          )}
         </div>
       )}
 
@@ -306,13 +330,35 @@ const OverallGraph = () => {
 
 const Analytics = () => {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
   const stats = useAppSelector((state) =>
     selectOverallStats(state, Grouping.byDate)
   )
+  const workouts = useAppSelector(selectWorkouts)
 
   useEffect(() => {
     dispatch(setHeaderTitle("Analytics"))
-  }, [])
+  }, [location])
+
+  if (!workouts.length)
+    return (
+      <Page>
+        <Page.Content>
+            <div className="my-8 flex flex-col justify-center items-center gap-4">
+              <div className="">
+                <h3 className="font-medium">No data to show. Get to work!</h3>
+              </div>
+              <Button
+                variant="success"
+                onClick={() => navigate("/app/workouts/new")}
+              >
+                Add workout
+              </Button>
+            </div>
+        </Page.Content>
+      </Page>
+    )
 
   return (
     <Page>
