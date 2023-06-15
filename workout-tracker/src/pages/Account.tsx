@@ -12,6 +12,7 @@ import { setHeaderTitle } from "../reducers/headerTitleReducer"
 import { useLocation, useNavigate } from "react-router-dom"
 import userService from "../services/users"
 import Spinner from "../components/Spinner"
+import Confirmation from "../components/Confirmation"
 
 type DeleteAccountProps = {
   deleteAccount: (setButtonLoading: Dispatch<boolean>) => void
@@ -20,43 +21,51 @@ type DeleteAccountProps = {
 const DeleteAccount = ({ deleteAccount }: DeleteAccountProps) => {
   const [confirmed, setConfirmed] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
+  const [confirmationOpen, setConfirmationOpen] = useState(false)
 
   return (
-    <div className="bg-white px-4 py-6 rounded-lg shadow-md">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="col-span-1">
-          <h4 className="font-bold">Delete Account</h4>
-        </div>
-        <div className="col-span-3 flex flex-col gap-4">
-          <div className="flex justify-between items-center ">
-            <h3>
-              Delete your account and all of your source data. This is
-              irreversible.
-            </h3>
-            <div className="flex gap-4">
-              <Button
-                variant="alert"
-                onClick={() =>
-                  confirmed
-                    ? deleteAccount(setButtonLoading)
-                    : setConfirmed(true)
-                }
-              >
-                <div className="flex gap-2 items-center">
-                  {buttonLoading && <Spinner />}
-                  <h3>Delete account</h3>
-                </div>
-              </Button>
-              {confirmed && (
-                <Button variant="neutral" onClick={() => setConfirmed(false)}>
-                  Cancel
+    <>
+      <div className="bg-white px-4 py-6 rounded-lg shadow-md">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="col-span-1">
+            <h4 className="font-bold">Delete Account</h4>
+          </div>
+          <div className="col-span-3 flex flex-col gap-4">
+            <div className="flex justify-between items-center ">
+              <h3>
+                Delete your account and all of your source data. This is
+                irreversible.
+              </h3>
+              <div className="flex gap-4">
+                <Button
+                  variant="alert"
+                  onClick={() =>
+                    confirmed ? setConfirmationOpen(true) : setConfirmed(true)
+                  }
+                >
+                  <div className="flex gap-2 items-center">
+                    {buttonLoading && <Spinner />}
+                    <h3>Delete account</h3>
+                  </div>
                 </Button>
-              )}
+                {confirmed && (
+                  <Button variant="neutral" onClick={() => setConfirmed(false)}>
+                    Cancel
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <Confirmation
+        show={confirmationOpen}
+        onClose={() => setConfirmationOpen(false)}
+        onConfirm={() => deleteAccount(setButtonLoading)}
+        title={`Delete your account?`}
+        message="This will delete the account and all related data. This action is irreversible."
+      />
+    </>
   )
 }
 

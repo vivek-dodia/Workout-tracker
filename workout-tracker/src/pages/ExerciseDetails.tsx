@@ -64,6 +64,7 @@ import Spinner from "../components/Spinner"
 import useNotify from "../hooks/useNotify"
 import StatCard from "../components/StatCard"
 import LinkButton from "../components/LinkButton"
+import Confirmation from "../components/Confirmation"
 
 type HistoryListItemProps = {
   workout: Workout
@@ -222,6 +223,7 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
   const navigate = useNavigate()
   const { notify } = useNotify()
   const user = useAppSelector(selectUser)
+  const [confirmationOpen, setConfirmationOpen] = useState(false)
   const isCustomExercise = exercise.user === user?.id
   const [selectedGrouping, setSelectedGrouping] = useState(GROUPING_OPTIONS[0])
   const [buttonLoading, setButtonLoading] = useState(false)
@@ -284,7 +286,7 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
               {isCustomExercise && (
                 <Button
                   variant="alert"
-                  onClick={() => deleteExercise(exercise.id)}
+                  onClick={() => setConfirmationOpen(true)}
                 >
                   <div className="flex gap-2">
                     {buttonLoading ? (
@@ -319,7 +321,7 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
                   <DropdownSection>
                     <DeleteOption
                       title="Delete Exercise"
-                      onClick={() => dispatch(removeExercise(exercise.id))}
+                      onClick={() => setConfirmationOpen(true)}
                     />
                   </DropdownSection>
                 )}
@@ -428,6 +430,14 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
             )}
           </div>
         </div>
+
+        <Confirmation
+          show={confirmationOpen}
+          onClose={() => setConfirmationOpen(false)}
+          onConfirm={() => deleteExercise(exercise.id)}
+          title={`Delete ${exercise.name}?`}
+          message="This will delete the exercise and all related data from workouts. This action is irreversible."
+        />
       </Page.Content>
     </Page>
   )

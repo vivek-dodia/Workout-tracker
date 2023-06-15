@@ -53,13 +53,16 @@ const Exercise = ({
             </div>
 
             <div className="flex flex-col justify-center">
-              <p className="font-semibold">{workoutExercise._exercise.name}</p>
               <div className="mt-1 flex gap-4 items-center">
-                <p className="text-sm text-gray-600">
-                  {workoutExercise._exercise.muscleGroups.join(", ")}
+                <p className="font-semibold">
+                  {workoutExercise._exercise.name}
                 </p>
                 {workoutExercise._exercise.user === user?.id && <CustomChip />}
               </div>
+
+              <p className="text-sm text-gray-600">
+                {workoutExercise._exercise.muscleGroups.join(", ")}
+              </p>
             </div>
           </div>
 
@@ -76,7 +79,9 @@ const Exercise = ({
               </Button>
               <Button
                 variant="secondary"
-                onClick={() => duplicateSet(exerciseIndex, workoutExercise.sets.length - 1)}
+                onClick={() =>
+                  duplicateSet(exerciseIndex, workoutExercise.sets.length - 1)
+                }
               >
                 <div className="flex">
                   <DocumentDuplicateIcon className="mr-2 h-5 w-5" />

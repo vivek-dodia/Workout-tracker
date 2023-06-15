@@ -124,6 +124,7 @@ export const selectOverallGraphData = createSelector(
 
     sets.forEach((set) => {
       const date = getDateByGrouping(set.date, grouping)
+      console.log(date)
       if (graphDataMap.has(date)) {
         const mapValue = graphDataMap.get(date)!
         const newMapValue = {

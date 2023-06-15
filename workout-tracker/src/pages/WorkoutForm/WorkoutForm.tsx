@@ -357,7 +357,7 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
 
   const isValidWorkoutForFinish = () => {
     if (workout.exercises.length === 0 || !workout.exercises) {
-      console.log("Entry must have some exercises!", "alert")
+      notify("Your workout has no exercises!", types.NotificationType.alert)
       return false
     }
 
@@ -367,7 +367,7 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
     )
 
     if (!hasValidRepsAndWeight) {
-      console.log("Please fill all reps and weights")
+      notify("Your workout has invalid set values!", types.NotificationType.alert)
       markErrorSets()
       return false
     }
@@ -377,11 +377,11 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
 
   const isValidWorkoutForSubmit = () => {
     if (!workout.name) {
-      console.log("Workout must have a name")
+      notify("Your workout must have a name!", types.NotificationType.alert)
       return false
     }
     if (!workout.duration) {
-      console.log("Workout must have a duration")
+      notify("Your workout must have a duration!", types.NotificationType.alert)
       return false
     }
     if (!workout.date) {

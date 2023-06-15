@@ -43,6 +43,7 @@ import Spinner from "../components/Spinner"
 import useNotify from "../hooks/useNotify"
 import StatCard from "../components/StatCard"
 import LinkButton from "../components/LinkButton"
+import Confirmation from "../components/Confirmation"
 
 const Details = ({ workout }: { workout: Workout }) => {
   const dispatch = useAppDispatch()
@@ -53,6 +54,7 @@ const Details = ({ workout }: { workout: Workout }) => {
   const graphData = useAppSelector((state) =>
     selectWorkoutGraphData(state, workout.id)
   )
+  const [confirmationOpen, setConfirmationOpen] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
 
   useEffect(() => {
@@ -96,7 +98,7 @@ const Details = ({ workout }: { workout: Workout }) => {
                   <h3>Duplicate workout</h3>
                 </div>
               </LinkButton>
-              <Button variant="alert" onClick={() => deleteWorkout(workout.id)}>
+              <Button variant="alert" onClick={() => setConfirmationOpen(true)}>
                 <div className="flex gap-2">
                   {buttonLoading ? (
                     <Spinner />
@@ -126,7 +128,7 @@ const Details = ({ workout }: { workout: Workout }) => {
                 <DropdownSection>
                   <DeleteOption
                     title="Delete workout"
-                    onClick={() => deleteWorkout(workout.id)}
+                    onClick={() => setConfirmationOpen(true)}
                   />
                 </DropdownSection>
               </Dropdown>
@@ -142,6 +144,9 @@ const Details = ({ workout }: { workout: Workout }) => {
             <h1 className="font-bold text-3xl">{workout.name}</h1>
             <p className="text-gray-500 mt-1">
               {format(parseISO(workout.date), "dd.MM.yyyy - H:mm")}
+            </p>
+            <p className="text-gray-500 mt-1">
+              {workout.notes}
             </p>
           </div>
 
@@ -262,6 +267,14 @@ const Details = ({ workout }: { workout: Workout }) => {
             <ExerciseCard key={i} exercise={exercise} user={user} />
           ))}
         </div>
+
+        <Confirmation
+          show={confirmationOpen}
+          onClose={() => setConfirmationOpen(false)}
+          onConfirm={() => deleteWorkout(workout.id)}
+          title={`Delete ${workout.name}?`}
+          message="This will delete the workout and all related data. This action is irreversible."
+        />
       </Page.Content>
     </Page>
   )
