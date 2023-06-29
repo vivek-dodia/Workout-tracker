@@ -56,7 +56,7 @@ const WarmupCalc = () => {
             <h3 className="text-left">2</h3>
             <h3 className="text-center">5</h3>
             <h3 className="text-right">
-              {(parseStringToNumber(weight) * 0.4).toFixed(2)} kg
+              {+(parseStringToNumber(weight) * 0.4).toFixed(2)} kg
             </h3>
           </div>
 
@@ -64,7 +64,7 @@ const WarmupCalc = () => {
             <h3 className="text-left">3</h3>
             <h3 className="text-center">4</h3>
             <h3 className="text-right">
-              {(parseStringToNumber(weight) * 0.5).toFixed(2)} kg
+              {+(parseStringToNumber(weight) * 0.5).toFixed(2)} kg
             </h3>
           </div>
 
@@ -72,7 +72,7 @@ const WarmupCalc = () => {
             <h3 className="text-left">4</h3>
             <h3 className="text-center">3</h3>
             <h3 className="text-right">
-              {(parseStringToNumber(weight) * 0.6).toFixed(2)} kg
+              {+(parseStringToNumber(weight) * 0.6).toFixed(2)} kg
             </h3>
           </div>
 
@@ -80,7 +80,7 @@ const WarmupCalc = () => {
             <h3 className="text-left">5</h3>
             <h3 className="text-center">2</h3>
             <h3 className="text-right">
-              {(parseStringToNumber(weight) * 0.75).toFixed(2)} kg
+              {+(parseStringToNumber(weight) * 0.75).toFixed(2)} kg
             </h3>
           </div>
         </div>
@@ -140,9 +140,9 @@ const OneRepMaxCalc = () => {
         <div className="divide-y">
           {repetitionPercentages.map((percentage, index) => {
             const repetitions = index + 1
-            const ormp = (orm * percentage).toFixed(2)
+            const ormp = +(orm * percentage).toFixed(2)
             return (
-              <div className="grid grid-cols-3 items-center py-2 text-sm">
+              <div key={index} className="grid grid-cols-3 items-center py-2 text-sm">
                 <h3 className="text-left">{repetitions}</h3>
                 <h3 className="text-center">{ormp} kg</h3>
                 <h3 className="text-right">{(percentage * 100).toFixed()} %</h3>

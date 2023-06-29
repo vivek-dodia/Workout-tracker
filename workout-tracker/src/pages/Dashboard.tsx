@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import Page from "../components/Layout/Page"
 import { DurationAndWorkoutsGraph } from "./Analytics"
 import { useAppDispatch, useAppSelector } from "../hooks"
@@ -39,7 +39,7 @@ const Dashboard = () => {
             <div className="bg-white px-4 py-4 rounded-lg shadow-md whitespace-nowrap">
               <h3 className="text-gray-500 text-sm">Logged Volume</h3>
               <h2 className="font-bold text-2xl mt-1">
-                {stats.totalVolume} kg
+                {+stats.totalVolume.toFixed(2)} kg
               </h2>
             </div>
           </div>

@@ -357,7 +357,10 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
               label="Heaviest Weight"
               value={stats.heaviestWeight + " kg"}
             />
-            <StatCard label="Best 1RM" value={stats.bestOrm + " kg"} />
+            <StatCard
+              label="Best 1RM"
+              value={+stats.bestOrm.toFixed(2) + " kg"}
+            />
             <StatCard
               label="Best Set Volume"
               value={stats.bestSetVolume + " kg"}
@@ -367,19 +370,22 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
               value={stats.bestWorkoutVolume + " kg"}
             />
             <StatCard label="Total Reps" value={stats.totalReps + " reps"} />
-            <StatCard label="Total volume" value={stats.totalVolume + "kg"} />
+            <StatCard
+              label="Total volume"
+              value={+stats.totalVolume.toFixed(2) + " kg"}
+            />
             <StatCard label="Total Sets" value={stats.totalSets + " sets"} />
             <StatCard
               label="Average Workout Reps"
-              value={stats.avgWorkoutReps + " reps"}
+              value={+stats.avgWorkoutReps.toFixed(2) + " reps"}
             />
             <StatCard
               label="Average Workout Sets"
-              value={stats.avgWorkoutSets + " sets"}
+              value={+stats.avgWorkoutSets.toFixed(2) + " sets"}
             />
             <StatCard
               label="Average Workout Volume"
-              value={stats.avgWorkoutVolume + " kg"}
+              value={+stats.avgWorkoutVolume.toFixed(2) + " kg"}
             />
           </div>
 

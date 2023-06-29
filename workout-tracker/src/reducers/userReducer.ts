@@ -3,7 +3,7 @@ import storageService from "../services/storage"
 import signInService from "../services/signIn"
 import userService from "../services/users"
 
-import { Credentials, User } from "../types"
+import { Credentials, NewCredentials, User } from "../types"
 import { AppDispatch } from "../store"
 
 export type UserState = User | null
@@ -63,6 +63,19 @@ export const removeUser = (id: string) => {
     storageService.removeUser()
     dispatch(_removeUser())
     return removedUser
+  }
+}
+
+export const signUp = (newCredentials: NewCredentials) => {
+  return async (dispatch: AppDispatch): Promise<string> => {
+    await userService.create(newCredentials)
+    const user = await signInService.signIn({
+      email: newCredentials.email,
+      password: newCredentials.password,
+    })
+    storageService.saveUser(user)
+    dispatch(_setUser(user))
+    return user.username
   }
 }
 

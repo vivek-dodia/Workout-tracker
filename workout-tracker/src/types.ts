@@ -1,6 +1,14 @@
-export type Credentials = {
+export interface Credentials {
   email: string
   password: string
+}
+
+export interface NewCredentials extends Credentials {
+  username: string
+}
+
+export interface NewFormCredentials extends NewCredentials {
+  passwordConfirmation: string
 }
 
 export enum NotificationType {

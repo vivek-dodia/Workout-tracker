@@ -472,7 +472,7 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
                   </div>
                 </Button>
               ) : (
-                <Button variant="tertiary" onClick={finishWorkout}>
+                <Button variant="success" onClick={finishWorkout}>
                   Finish Workout
                 </Button>
               )}

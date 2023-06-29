@@ -7,9 +7,9 @@ import {
   OVERALL_DATA_KEY_OPTIONS,
   START_DATE_OPTIONS,
 } from "../utils/const"
-import { format, isWithinInterval, parseISO } from "date-fns"
+import { isWithinInterval, parseISO } from "date-fns"
 import Select from "../components/Select"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import Button from "../components/Button"
 import {
   CartesianGrid,
@@ -37,7 +37,6 @@ import {
 } from "@heroicons/react/24/outline"
 import { ValueType } from "recharts/types/component/DefaultTooltipContent"
 import { setHeaderTitle } from "../reducers/headerTitleReducer"
-import { formatDate } from "../utils/fn"
 import { selectOverallStats } from "../selectors/statsSelectors"
 import { Grouping } from "../types"
 import StatCard from "../components/StatCard"
@@ -187,7 +186,7 @@ const MusclesGraph = () => {
             orientation="top"
             type="number"
             stroke="#8884d8"
-            tickFormatter={(value) => value + "kg"}
+            tickFormatter={(value) => value + " kg"}
           />
           <XAxis
             xAxisId="bottom"
@@ -200,7 +199,7 @@ const MusclesGraph = () => {
             isAnimationActive={false}
             cursor={{ fill: "#e2e8f0" }}
             formatter={(value, _name, props) =>
-              props.dataKey === "volume" ? ((value + "kg") as ValueType) : value
+              props.dataKey === "volume" ? ((+(value as number).toFixed(2) + " kg") as ValueType) : value
             }
           />
           <Legend />
@@ -345,17 +344,17 @@ const Analytics = () => {
     return (
       <Page>
         <Page.Content>
-            <div className="my-8 flex flex-col justify-center items-center gap-4">
-              <div className="">
-                <h3 className="font-medium">No data to show. Get to work!</h3>
-              </div>
-              <Button
-                variant="success"
-                onClick={() => navigate("/app/workouts/new")}
-              >
-                Add workout
-              </Button>
+          <div className="my-8 flex flex-col justify-center items-center gap-4">
+            <div className="">
+              <h3 className="font-medium">No data to show. Get to work!</h3>
             </div>
+            <Button
+              variant="success"
+              onClick={() => navigate("/app/workouts/new")}
+            >
+              Add workout
+            </Button>
+          </div>
         </Page.Content>
       </Page>
     )
@@ -365,9 +364,43 @@ const Analytics = () => {
       <Page.Content>
         <div className="grid grid-cols-1 mt-8 gap-8">
           <div className="mt-8 grid grid-cols-auto gap-4">
-            {Object.keys(stats).map((key) => (
-              <StatCard label={key + ""} value={stats[key]} />
-            ))}
+            <StatCard label={"Workouts"} value={stats.workoutCount} />
+            <StatCard
+              label={"Total Duration"}
+              value={stats.totalDuration + " min"}
+            />
+            <StatCard label={"Total Sets"} value={stats.totalSets} />
+            <StatCard label={"Total Reps"} value={stats.totalReps} />
+            <StatCard
+              label={"Total Volume"}
+              value={+stats.totalVolume.toFixed(2) + " kg"}
+            />
+
+            <StatCard
+              label={"Avg Workout Duration"}
+              value={+stats.avgWorkoutDuration.toFixed(2) + " min"}
+            />
+            <StatCard
+              label={"Avg Workout Sets"}
+              value={+stats.avgWorkoutSets.toFixed(2)}
+            />
+            <StatCard
+              label={"Avg Workout Reps"}
+              value={+stats.avgWorkoutReps.toFixed(2)}
+            />
+            <StatCard
+              label={"Avg Workout Volume"}
+              value={+stats.avgWorkoutVolume.toFixed(2) + " kg"}
+            />
+
+            <StatCard
+              label={"Best Workout Volume"}
+              value={+stats.bestWorkoutVolume.toFixed(2) + " kg"}
+            />
+            <StatCard
+              label={"Best Workout Sets"}
+              value={stats.bestWorkoutSets}
+            />
           </div>
           <OverallGraph />
           <MusclesGraph />

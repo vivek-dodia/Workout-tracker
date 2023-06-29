@@ -16,9 +16,15 @@ import Confirmation from "../components/Confirmation"
 
 type DeleteAccountProps = {
   deleteAccount: (setButtonLoading: Dispatch<boolean>) => void
+  notify: (message: string, type?: NotificationType, duration?: number) => void
+  disabled: boolean
 }
 
-const DeleteAccount = ({ deleteAccount }: DeleteAccountProps) => {
+const DeleteAccount = ({
+  deleteAccount,
+  disabled,
+  notify,
+}: DeleteAccountProps) => {
   const [confirmed, setConfirmed] = useState(false)
   const [buttonLoading, setButtonLoading] = useState(false)
   const [confirmationOpen, setConfirmationOpen] = useState(false)
@@ -61,7 +67,14 @@ const DeleteAccount = ({ deleteAccount }: DeleteAccountProps) => {
       <Confirmation
         show={confirmationOpen}
         onClose={() => setConfirmationOpen(false)}
-        onConfirm={() => deleteAccount(setButtonLoading)}
+        onConfirm={() =>
+          disabled
+            ? notify(
+                "Action disabled for demo accounts!",
+                NotificationType.alert
+              )
+            : deleteAccount(setButtonLoading)
+        }
         title={`Delete your account?`}
         message="This will delete the account and all related data. This action is irreversible."
       />
@@ -72,9 +85,10 @@ const DeleteAccount = ({ deleteAccount }: DeleteAccountProps) => {
 type PasswordProps = {
   updatePassword: (newPassword: string) => void
   notify: (message: string, type?: NotificationType, duration?: number) => void
+  disabled: boolean
 }
 
-const Password = ({ updatePassword, notify }: PasswordProps) => {
+const Password = ({ updatePassword, notify, disabled }: PasswordProps) => {
   const [change, setChange] = useState(false)
   const [newPassword, setNewPassword] = useState("")
 
@@ -128,7 +142,12 @@ const Password = ({ updatePassword, notify }: PasswordProps) => {
                 <button
                   className="mt-2 py-2 px-4 rounded-md hover:bg-gray-200"
                   onClick={() => {
-                    setChange(true)
+                    disabled
+                      ? notify(
+                          "Action disabled for demo accounts!",
+                          NotificationType.alert
+                        )
+                      : setChange(true)
                   }}
                 >
                   <h3 className="font-medium text-sm">Change</h3>
@@ -146,9 +165,10 @@ type EmailProps = {
   userEmail: string
   updateEmail: (newEmail: string) => void
   notify: (message: string, type?: NotificationType, duration?: number) => void
+  disabled: boolean
 }
 
-const Email = ({ userEmail, updateEmail, notify }: EmailProps) => {
+const Email = ({ userEmail, updateEmail, notify, disabled }: EmailProps) => {
   const [change, setChange] = useState(false)
   const [newEmail, setNewEmail] = useState(userEmail)
 
@@ -215,7 +235,12 @@ const Email = ({ userEmail, updateEmail, notify }: EmailProps) => {
                 <button
                   className="mt-2 py-2 px-4 rounded-md hover:bg-gray-200"
                   onClick={() => {
-                    setChange(true)
+                    disabled
+                      ? notify(
+                          "Action disabled for demo accounts!",
+                          NotificationType.alert
+                        )
+                      : setChange(true)
                   }}
                 >
                   <h3 className="font-medium text-sm">Change</h3>
@@ -233,9 +258,15 @@ type UsernameProps = {
   userUsername: string
   updateUsername: (newUsername: string) => void
   notify: (message: string, type?: NotificationType, duration?: number) => void
+  disabled: boolean
 }
 
-const Username = ({ userUsername, updateUsername, notify }: UsernameProps) => {
+const Username = ({
+  userUsername,
+  updateUsername,
+  notify,
+  disabled,
+}: UsernameProps) => {
   const [change, setChange] = useState(false)
   const [newUsername, setNewUsername] = useState(userUsername)
 
@@ -294,7 +325,12 @@ const Username = ({ userUsername, updateUsername, notify }: UsernameProps) => {
                 <button
                   className="mt-2 py-2 px-4 rounded-md hover:bg-gray-200"
                   onClick={() => {
-                    setChange(true)
+                    disabled
+                      ? notify(
+                          "Action disabled for demo accounts!",
+                          NotificationType.alert
+                        )
+                      : setChange(true)
                   }}
                 >
                   <h3 className="font-medium text-sm">Change</h3>
@@ -312,12 +348,14 @@ type BodyweightProps = {
   userBodyweight: string
   updateBodyweight: (newBodyweight: number) => void
   notify: (message: string, type?: NotificationType, duration?: number) => void
+  disabled: boolean
 }
 
 const Bodyweight = ({
   userBodyweight,
   updateBodyweight,
   notify,
+  disabled,
 }: BodyweightProps) => {
   const [change, setChange] = useState(false)
   const [newBodyweight, setNewBodyweight] = useState(userBodyweight)
@@ -383,7 +421,12 @@ const Bodyweight = ({
                 <button
                   className="mt-2 py-2 px-4 rounded-md hover:bg-gray-200"
                   onClick={() => {
-                    setChange(true)
+                    disabled
+                      ? notify(
+                          "Action disabled for demo accounts!",
+                          NotificationType.alert
+                        )
+                      : setChange(true)
                   }}
                 >
                   <h3 className="font-medium text-sm">Change</h3>
@@ -403,6 +446,7 @@ const Account = () => {
   const location = useLocation()
   const user = useAppSelector(selectUser)!
   const { notify } = useNotify()
+  const isDemoUser = user.username === "DemoUser"
 
   useEffect(() => {
     dispatch(setHeaderTitle("Account"))
@@ -498,21 +542,32 @@ const Account = () => {
               userBodyweight={user.measurements.bodyweight.toString()}
               updateBodyweight={updateBodyweight}
               notify={notify}
+              disabled={isDemoUser}
             />
             <div className="bg-white px-4 py-6 rounded-lg shadow-md space-y-8">
               <Username
                 userUsername={user.username}
                 updateUsername={updateUsername}
                 notify={notify}
+                disabled={isDemoUser}
               />
               <Email
                 userEmail={user.email}
                 updateEmail={updateEmail}
                 notify={notify}
+                disabled={isDemoUser}
               />
-              <Password updatePassword={updatePassword} notify={notify} />
+              <Password
+                updatePassword={updatePassword}
+                notify={notify}
+                disabled={isDemoUser}
+              />
             </div>
-            <DeleteAccount deleteAccount={deleteAccount} />
+            <DeleteAccount
+              deleteAccount={deleteAccount}
+              notify={notify}
+              disabled={isDemoUser}
+            />
           </div>
         </div>
       </Page.Content>

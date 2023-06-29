@@ -3,7 +3,6 @@ import Dashboard from "../../pages/Dashboard"
 import NoMatch from "../../pages/NoMatch/NoMatch"
 import Exercises from "../../pages/Exercises"
 import ExerciseDetails from "../../pages/ExerciseDetails"
-import AdminTools from "../../pages/AdminTools"
 import Workouts from "../../pages/Workouts"
 import WorkoutDetails from "../../pages/WorkoutDetails"
 import WorkoutForm from "../../pages/WorkoutForm/WorkoutForm"
@@ -43,9 +42,6 @@ const Routes = () => {
           <Route path="duplicate/:id" element={<WorkoutForm duplicating />} />
         </Route>
 
-        <Route path="/admin">
-          <Route index element={<AdminTools />} />
-        </Route>
         <Route path="*" element={<NoMatch />} />
       </RRDRoutes>
     </>

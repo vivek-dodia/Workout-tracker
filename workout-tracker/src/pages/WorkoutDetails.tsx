@@ -152,18 +152,18 @@ const Details = ({ workout }: { workout: Workout }) => {
 
           {/* STATS */}
           <div className="grid grid-cols-auto mt-8 gap-4">
-            <StatCard label="Duration" value={workout.duration + "min"} />
+            <StatCard label="Duration" value={workout.duration + " min"} />
             <StatCard label="Exercises" value={stats.exerciseCount} />
             <StatCard label="Sets" value={stats.setsCount} />
             <StatCard label="Reps" value={stats.totalReps} />
             <StatCard
               label="Heaviest Weight"
-              value={stats.heaviestWeight + "kg"}
+              value={stats.heaviestWeight + " kg"}
             />
-            <StatCard label="Total volume" value={stats.totalVolume + "kg"} />
+            <StatCard label="Total volume" value={+stats.totalVolume.toFixed(2) + " kg"} />
             <StatCard
               label="Top Set"
-              value={stats.topSet.reps + "x" + stats.topSet.weight + "kg"}
+              value={stats.topSet.reps + " x " + stats.topSet.weight + " kg"}
             />
           </div>
 
@@ -198,7 +198,7 @@ const Details = ({ workout }: { workout: Workout }) => {
                     orientation="top"
                     type="number"
                     stroke="#8884d8"
-                    tickFormatter={(value) => value + "kg"}
+                    tickFormatter={(value) => value + " kg"}
                   />
                   <XAxis
                     xAxisId="bottom"
@@ -212,7 +212,7 @@ const Details = ({ workout }: { workout: Workout }) => {
                     cursor={{ fill: "#e2e8f0" }}
                     formatter={(value, _name, props) =>
                       props.dataKey === "volume"
-                        ? ((value + "kg") as ValueType)
+                        ? ((+(value as number).toFixed(2) + " kg") as ValueType)
                         : value
                     }
                   />

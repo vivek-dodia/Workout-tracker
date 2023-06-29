@@ -1,9 +1,9 @@
 import axios from "../axios"
-import { User } from "../types"
+import { NewCredentials, User } from "../types"
 
 const baseUrl = import.meta.env.VITE_BASE_URL + "users"
 
-const create = async (objectToCreate: User): Promise<User> => {
+const create = async (objectToCreate: NewCredentials): Promise<User> => {
   const { data } = await axios.post<User>(baseUrl, objectToCreate)
   return data
 }

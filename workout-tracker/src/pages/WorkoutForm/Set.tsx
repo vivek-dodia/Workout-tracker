@@ -1,6 +1,6 @@
 import { CheckIcon } from "@heroicons/react/24/outline"
 import * as types from "../../types"
-import { REGEX_DECIMAL } from "../../utils/const"
+import { REGEX_DECIMAL, REGEX_INT } from "../../utils/const"
 import { classNames } from "../../utils/fn"
 import Dropdown from "../../components/Dropdown"
 import DropdownSection from "../../components/Dropdown/DropdownSection"
@@ -122,7 +122,7 @@ const Set = ({
                   status: types.SetStatusType.incomplete,
                   weight: "0",
                   reps:
-                    REGEX_DECIMAL.test(target.value) || target.value === ""
+                    REGEX_INT.test(target.value) || target.value === ""
                       ? target.value
                       : set.reps,
                 })
@@ -146,7 +146,7 @@ const Set = ({
                     ...set,
                     status: types.SetStatusType.incomplete,
                     reps:
-                      REGEX_DECIMAL.test(target.value) || target.value === ""
+                      REGEX_INT.test(target.value) || target.value === ""
                         ? target.value
                         : set.reps,
                   })

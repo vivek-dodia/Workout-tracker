@@ -14,6 +14,7 @@ import NoMatch from "./pages/NoMatch/NoMatch"
 import { useAppDispatch } from "./hooks"
 import { initUser } from "./reducers/userReducer"
 import Loading from "./components/Loading"
+import SignUp from "./pages/SignUp"
 
 const PathActions = (): null => {
   const { pathname } = useLocation()
@@ -50,6 +51,7 @@ const App = () => {
         <PathActions />
         <Routes>
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/app/*" element={<Layout />} />
           <Route path="/*" element={<NoMatch />} />
         </Routes>
