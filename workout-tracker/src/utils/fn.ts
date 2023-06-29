@@ -11,7 +11,6 @@ import {
   format,
   isSameISOWeek,
   isSameMonth,
-  parse,
   parseISO,
   startOfISOWeek,
   startOfMonth,

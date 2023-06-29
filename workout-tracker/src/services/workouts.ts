@@ -28,16 +28,4 @@ const remove = async (id: string): Promise<Workout> => {
   return data
 }
 
-// ADMIN
-
-const init = async () => {
-  const { data } = await axios.post(`${baseUrl}/init`)
-  console.log("response.data", data)
-}
-
-const removeAll = async () => {
-  await axios.delete(`${baseUrl}`)
-  console.log('"DB CLEARED"', "DB CLEARED")
-}
-
-export default { getAll, create, update, remove, removeAll, init }
+export default { getAll, create, update, remove }
