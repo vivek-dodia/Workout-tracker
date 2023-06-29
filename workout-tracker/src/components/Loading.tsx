@@ -7,6 +7,7 @@ const Loading = ({ loadingText = "Loading" }: { loadingText?: string }) => {
       </div>
       <div className="mt-4 flex gap-2">
         <svg
+          data-testid="loading-spinner"
           className="animate-spin h-5 w-5 text-blue-500"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

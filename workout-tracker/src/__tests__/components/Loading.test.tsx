@@ -23,4 +23,11 @@ describe("Loading component", () => {
     expect(logoImage).toBeInTheDocument()
     expect(appNameElement).toBeInTheDocument()
   })
+
+  it("renders the loading spinner", () => {
+    const { getByTestId } = render(<Loading />);
+    const spinnerElement = getByTestId("loading-spinner");
+
+    expect(spinnerElement).toBeInTheDocument();
+  });
 })
