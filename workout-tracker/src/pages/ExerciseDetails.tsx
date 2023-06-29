@@ -13,13 +13,9 @@ import {
 
 import {
   ChevronRightIcon,
-  ArrowRightIcon,
   PencilSquareIcon,
   DocumentDuplicateIcon,
   TrashIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
-  ArrowLeftIcon,
 } from "@heroicons/react/24/outline"
 
 import Page from "../components/Layout/Page"
@@ -32,8 +28,6 @@ import NoExerciseMatch from "./NoMatch/NoExerciseMatch"
 import {
   Exercise,
   ExerciseGraphData,
-  ExerciseSetRecord,
-  ExerciseStats,
   Grouping,
   GroupingOption,
   NotificationType,
@@ -88,9 +82,9 @@ export const HistoryListItem = ({ workout }: HistoryListItemProps) => {
           </div>
 
           <div className="flex flex-col justify-center">
-            <p className="font-semibold text-lg text-gray-800 group-hover:text-black">
+            <p className="font-semibold text-sm md:text-lg text-gray-800 group-hover:text-black">
               {workout.name}
-              <span className="ml-2 text-sm font-normal text-gray-500 group-hover:text-gray-600">
+              <span className="ml-2 text-xs md:text-sm font-normal text-gray-500 group-hover:text-gray-600">
                 {format(parseISO(workout.date), "E dd.MM.yy - HH:mm")}
               </span>
             </p>
@@ -407,8 +401,9 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
               </div>
             ) : (
               <div className="mt-8 grid grid-cols-auto gap-4">
-                {stats.setRecords.map((record) => (
+                {stats.setRecords.map((record, i) => (
                   <StatCard
+                    key={i}
                     label={record.reps + " x " + record.weight + " kg"}
                     value={record.volume + " kg"}
                   />
@@ -429,8 +424,8 @@ const Details = ({ exercise }: { exercise: Exercise }) => {
               </div>
             ) : (
               <ul className="mt-4 divide-y pr-2 max-h-[500px] divide-gray-200 overflow-y-auto">
-                {workouts.map((workout) => (
-                  <HistoryListItem workout={workout} />
+                {workouts.map((workout, i) => (
+                  <HistoryListItem key={i} workout={workout} />
                 ))}
               </ul>
             )}

@@ -37,7 +37,7 @@ const DeleteAccount = ({
             <h4 className="font-bold">Delete Account</h4>
           </div>
           <div className="col-span-3 flex flex-col gap-4">
-            <div className="flex justify-between items-center ">
+            <div className="flex justify-between items-center gap-4">
               <h3>
                 Delete your account and all of your source data. This is
                 irreversible.

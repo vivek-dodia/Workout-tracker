@@ -367,7 +367,10 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
     )
 
     if (!hasValidRepsAndWeight) {
-      notify("Your workout has invalid set values!", types.NotificationType.alert)
+      notify(
+        "Your workout has invalid set values!",
+        types.NotificationType.alert
+      )
       markErrorSets()
       return false
     }
@@ -458,10 +461,12 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
               <GoBackButton to="/app/workouts">Workouts</GoBackButton>
             </div>
 
-            <WorkoutStats
-              workout={workout}
-              startTime={updating ? undefined : startTime}
-            />
+            <div className="hidden sm:block">
+              <WorkoutStats
+                workout={workout}
+                startTime={updating ? undefined : startTime}
+              />
+            </div>
 
             <div>
               {updating ? (
@@ -477,6 +482,12 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
                 </Button>
               )}
             </div>
+          </div>
+          <div className="mt-4 sm:hidden">
+            <WorkoutStats
+              workout={workout}
+              startTime={updating ? undefined : startTime}
+            />
           </div>
         </div>
       </Page.Header>
@@ -556,8 +567,8 @@ const WorkoutForm = ({ updating, duplicating }: WorkoutFormProps) => {
           )}
 
           {workout.exercises.length > 0 && (
-            <div className="grid grid-cols-4 py-12 gap-4">
-              <div className="col-start-2 col-span-2 flex gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 py-12 gap-4">
+              <div className="lg:col-start-2 col-span-2 flex gap-4">
                 <Button
                   className="flex-1"
                   onClick={() => setSelectingExercises(true)}

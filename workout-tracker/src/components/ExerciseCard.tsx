@@ -29,11 +29,11 @@ const ExerciseCard = ({ exercise, user }: ExerciseCardProps) => {
             </div>
 
             <div className="flex flex-col justify-center">
-              <div className="mt-1 flex gap-4 items-center">
+              <div className="flex gap-4 items-center">
                 <p className="font-semibold">{exercise._exercise.name}</p>
                 {exercise._exercise.user === user?.id && <CustomChip />}
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="mt-1 text-sm text-gray-600">
                 {exercise._exercise.muscleGroups.join(", ")} |{" "}
                 {exercise.sets.length} sets | Total volume{" "}
                 {
@@ -67,7 +67,7 @@ const ExerciseCard = ({ exercise, user }: ExerciseCardProps) => {
               <Tooltip text="Set number">Set</Tooltip>
             </div>
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-3">
-              <Tooltip text="Set type. Warmup or working.">Type</Tooltip>
+              <Tooltip text="Set type. Warmup, working or AMRAP.">Type</Tooltip>
             </div>
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-3">
               <Tooltip text="Repetitions per set.">Reps</Tooltip>

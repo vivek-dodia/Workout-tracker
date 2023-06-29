@@ -73,7 +73,19 @@ const {
 export const initializeWorkouts = () => {
   return async (dispatch: AppDispatch): Promise<Workout[]> => {
     const workouts = await workoutService.getAll()
-    dispatch(_initializeWorkouts(workouts))
+    const formattedWorkouts = workouts.map((workout) => ({
+      ...workout,
+      exercises: workout.exercises.map((exercise) => ({
+        ...exercise,
+        sets: exercise.sets.map((set) => ({
+          ...set,
+          weight: +set.weight.toFixed(2),
+          actualWeight: +set.actualWeight.toFixed(2),
+        })),
+      })),
+    }))
+
+    dispatch(_initializeWorkouts(formattedWorkouts))
     return workouts
   }
 }

@@ -51,7 +51,7 @@ const Sets = ({
               <Tooltip text="Set number">Set</Tooltip>
             </div>
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-3">
-              <Tooltip text="Set type. Warmup or working.">Type</Tooltip>
+              <Tooltip text="Set type. Warmup, working or AMRAP.">Type</Tooltip>
             </div>
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-3">
               <Tooltip text="Latest past performance.">Previous</Tooltip>

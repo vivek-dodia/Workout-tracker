@@ -100,7 +100,7 @@ const WorkoutFinish = ({
               </button>
             </div>
 
-            <div>
+            <div className="hidden sm:block">
               <WorkoutStats workout={workout} />
             </div>
 
@@ -113,8 +113,13 @@ const WorkoutFinish = ({
               </Button>
             </div>
           </div>
+
+          <div className="mt-4 sm:hidden">
+            <WorkoutStats workout={workout} />
+          </div>
         </div>
       </Page.Header>
+
       <Page.Content>
         <div className="mt-8">
           <WorkoutFinishInputs workout={workout} setWorkout={setWorkout} />

@@ -46,21 +46,23 @@ const Exercise = ({
       <div className="">
         <div className="flex justify-between items-center">
           <div className="flex gap-x-4 py-1">
-            <div className="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden bg-blue-500 rounded-full dark:bg-gray-600">
-              <span className="font-medium dark:text-gray-300 text-white">
-                {workoutExercise._exercise.name[0]}
-              </span>
+            <div>
+              <div className="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden bg-blue-500 rounded-full dark:bg-gray-600">
+                <span className="font-medium dark:text-gray-300 text-white">
+                  {workoutExercise._exercise.name[0]}
+                </span>
+              </div>
             </div>
 
             <div className="flex flex-col justify-center">
-              <div className="mt-1 flex gap-4 items-center">
+              <div className="flex gap-4 items-center">
                 <p className="font-semibold">
                   {workoutExercise._exercise.name}
                 </p>
                 {workoutExercise._exercise.user === user?.id && <CustomChip />}
               </div>
 
-              <p className="text-sm text-gray-600">
+              <p className="mt-1 text-sm text-gray-600">
                 {workoutExercise._exercise.muscleGroups.join(", ")}
               </p>
             </div>

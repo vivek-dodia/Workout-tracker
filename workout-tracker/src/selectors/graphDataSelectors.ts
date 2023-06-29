@@ -124,7 +124,7 @@ export const selectOverallGraphData = createSelector(
 
     sets.forEach((set) => {
       const date = getDateByGrouping(set.date, grouping)
-      console.log(date)
+
       if (graphDataMap.has(date)) {
         const mapValue = graphDataMap.get(date)!
         const newMapValue = {
@@ -170,7 +170,7 @@ export const selectWorkoutsGraphData = createSelector(
         const newMapValue = {
           ...mapValue,
           totalDuration: mapValue.totalDuration + workout.duration,
-          workoutCount: mapValue.workoutCount + 1
+          workoutCount: mapValue.workoutCount + 1,
         }
         graphDataMap.set(date, newMapValue)
       } else {
@@ -178,13 +178,13 @@ export const selectWorkoutsGraphData = createSelector(
           date,
           formattedDate: format(parseISO(date), "dd.MM.yy"),
           totalDuration: workout.duration,
-          workoutCount: 1
+          workoutCount: 1,
         })
       }
     })
 
-    const graphData = [...graphDataMap.values()].sort(
-      (a, b) => compareAsc(parseISO(a.date), parseISO(b.date))
+    const graphData = [...graphDataMap.values()].sort((a, b) =>
+      compareAsc(parseISO(a.date), parseISO(b.date))
     )
 
     const end = performance.now()

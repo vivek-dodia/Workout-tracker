@@ -5,11 +5,13 @@ import { selectWorkoutsByQuery } from "../selectors/workoutSelectors"
 import { setHeaderTitle } from "../reducers/headerTitleReducer"
 import Page from "../components/Layout/Page"
 import SearchBar from "../components/SearchBar"
-import { ChevronRightIcon } from "@heroicons/react/24/outline"
+import { ChevronRightIcon, PlusIcon } from "@heroicons/react/24/outline"
 import { format, parseISO } from "date-fns"
 import { useInView } from "react-intersection-observer"
-import Button from "../components/Button"
 import LinkButton from "../components/LinkButton"
+import Dropdown from "../components/Dropdown"
+import DropdownSection from "../components/Dropdown/DropdownSection"
+import AddOption from "../components/Dropdown/AddOption"
 
 const Workouts = () => {
   const dispatch = useAppDispatch()
@@ -87,18 +89,32 @@ const Workouts = () => {
     <Page>
       <Page.Header>
         <div className="py-4 container px-6 mx-auto">
-          <div className="grid grid-cols-9 gap-4 items-center">
+          <div className="flex-row flex gap-4 items-center">
             <SearchBar
-              className="col-span-8"
+              className="flex-1"
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               placeholder="Search workouts..."
             />
+
+            <div className="block sm:hidden">
+              <Dropdown>
+                <DropdownSection>
+                  <AddOption
+                    title="Add workout"
+                    color="green-500"
+                    onClick={() => navigate("/app/workouts/new")} 
+                  />
+                </DropdownSection>
+              </Dropdown>
+            </div>
             <LinkButton
+              className="gap-2 items-center hidden sm:flex"
               variant="success"
               to="/app/workouts/new"
             >
-              Add workout
+              <PlusIcon className="h6 w-6" />
+              <h3>Add workout</h3>
             </LinkButton>
           </div>
         </div>

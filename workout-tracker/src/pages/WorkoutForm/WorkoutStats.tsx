@@ -38,8 +38,8 @@ const WorkoutStats = ({ workout, startTime }: WorkoutStatsProps) => {
   )
 
   return (
-    <div className=" text-sm">
-      <div className="flex gap-4 lg:gap-8">
+    <div className="text-sm">
+      <div className="flex justify-evenly sm:gap-8">
         {!!startTime && (
           <div className="flex flex-col gap-1">
             <h3 className="text-xs text-gray-500">Duration</h3>
@@ -49,7 +49,7 @@ const WorkoutStats = ({ workout, startTime }: WorkoutStatsProps) => {
 
         <div className="flex flex-col gap-1">
           <h3 className="text-xs text-gray-500">Volume</h3>
-          <h2>{totalVolume || 0} kg</h2>
+          <h2>{+totalVolume.toFixed(2) || 0} kg</h2>
         </div>
 
         <div className="flex flex-col gap-1">

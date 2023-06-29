@@ -64,8 +64,8 @@ const Dashboard = () => {
               <div><h3>No workouts found</h3></div>
             ) : (
               <ul className="mt-4 divide-y pr-2 divide-gray-200">
-                {workouts.slice(0, 5).map((workout) => (
-                  <HistoryListItem workout={workout} />
+                {workouts.slice(0, 5).map((workout, i) => (
+                  <HistoryListItem key={i} workout={workout} />
                 ))}
               </ul>
             )}

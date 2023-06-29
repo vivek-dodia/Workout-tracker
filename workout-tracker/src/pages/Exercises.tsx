@@ -1,5 +1,5 @@
 import { useEffect, useState, Dispatch } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../hooks"
 
 import { setHeaderTitle } from "../reducers/headerTitleReducer"
@@ -9,6 +9,7 @@ import {
   ArrowLeftIcon,
   CheckIcon,
   ChevronRightIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline"
 
 import Page from "../components/Layout/Page"
@@ -19,6 +20,9 @@ import { classNames } from "../utils/fn"
 import Button from "../components/Button"
 import { useInView } from "react-intersection-observer"
 import LinkButton from "../components/LinkButton"
+import Dropdown from "../components/Dropdown"
+import DropdownSection from "../components/Dropdown/DropdownSection"
+import AddOption from "../components/Dropdown/AddOption"
 
 export const CustomChip = () => {
   return (
@@ -99,13 +103,14 @@ type Props = {
     replacingExercise: {
       active: boolean
       exerciseIndex: number
-    } 
+    }
     selectedCount: number
   }
 }
 
 const Exercises = ({ asPicker }: Props) => {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const location = useLocation()
   const user = useAppSelector(selectUser)
   const [searchQuery, setSearchQuery] = useState<string>("")
@@ -255,7 +260,7 @@ const Exercises = ({ asPicker }: Props) => {
                 )}
               </div>
             )}
-            <div className="flex-col sm:flex-row flex gap-4 items-center">
+            <div className="flex-row flex gap-4 items-center">
               <SearchBar
                 className="flex-1"
                 searchQuery={searchQuery}
@@ -263,9 +268,27 @@ const Exercises = ({ asPicker }: Props) => {
                 placeholder="Search exercises..."
               />
               {!asPicker && (
-                <LinkButton variant="success" to="/app/exercises/new">
-                  Add Exercise
-                </LinkButton>
+                <>
+                  <div className="block sm:hidden">
+                    <Dropdown>
+                      <DropdownSection>
+                        <AddOption
+                          title="Add exercise"
+                          color="green-500"
+                          onClick={() => navigate("/app/exercises/new")}
+                        />
+                      </DropdownSection>
+                    </Dropdown>
+                  </div>
+                  <LinkButton
+                    className="gap-2 items-center hidden sm:flex "
+                    variant="success"
+                    to="/app/exercises/new"
+                  >
+                    <PlusIcon className="h6 w-6" />
+                    <h3>Add exercise</h3>
+                  </LinkButton>
+                </>
               )}
             </div>
           </div>
