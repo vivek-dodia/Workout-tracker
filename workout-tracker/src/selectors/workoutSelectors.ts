@@ -3,13 +3,12 @@ import { createSelector } from "@reduxjs/toolkit"
 import { selectId, selectQuery } from "./commonSelectors"
 
 import { RootState } from "../store"
-import { FormWorkout, SetStatusType, SetType, Workout } from "../types"
+import { FormWorkout, SetStatusType, Workout } from "../types"
 import { compareDesc, parseISO } from "date-fns"
 
 export const selectWorkouts = createSelector(
   [(state: RootState): Workout[] => state.workouts],
   (workouts: Workout[]): Workout[] => {
-    console.log("Select Workouts")
     return [...workouts].sort((a, b) =>
       a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
     )
@@ -63,7 +62,6 @@ export const selectFormWorkoutById = createSelector(
 export const selectWorkoutsSortedByDescDate = createSelector(
   [selectWorkouts],
   (workouts: Workout[]): Workout[] => {
-    console.log("selectWorkoutsSortedByDescDate")
     return [...workouts].sort((a, b) =>
       compareDesc(parseISO(a.date), parseISO(b.date))
     )

@@ -67,8 +67,6 @@ export const selectExerciseStats = createSelector(
     graphData: ExerciseGraphData[],
     setsWithData: SetWithData[]
   ): ExerciseStats => {
-    const start = performance.now()
-
     const dataPoints: number = graphData.length
 
     const sets = graphData.map((dataPoint) => dataPoint.sets)
@@ -115,8 +113,7 @@ export const selectExerciseStats = createSelector(
         return acc
       }, [] as { reps: number; weight: number; volume: number }[])
       .sort((a, b) => a.reps - b.reps)
-    const end = performance.now()
-    console.log(`Execution time: ${end - start} ms`)
+
     return {
       totalSets,
       totalReps,
@@ -136,7 +133,6 @@ export const selectExerciseStats = createSelector(
 export const selectOverallStats = createSelector(
   [selectOverallGraphData, selectWorkoutsGraphData],
   (overallGraphData, workoutsGraphData) => {
-    const start = performance.now()
     const dataPoints: number = overallGraphData.length
 
     const sets = overallGraphData.map((dataPoint) => dataPoint.sets)
@@ -161,8 +157,6 @@ export const selectOverallStats = createSelector(
       +(totalDuration / dataPoints).toFixed(2)
     )
 
-    const end = performance.now()
-    console.log(`Execution time: ${end - start} ms`)
     return {
       workoutCount: dataPoints,
       totalSets,

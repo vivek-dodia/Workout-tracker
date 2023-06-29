@@ -43,13 +43,9 @@ export const selectSetsWithDataSortedByDescDate = createSelector(
 export const selectSetsWithDataSortedByAscDate = createSelector(
   [selectSetsWithData],
   (sets: SetWithData[]): SetWithData[] => {
-    const start = performance.now()
-
     const res = [...sets].sort((a, b) =>
       compareAsc(parseISO(a.date), parseISO(b.date))
     )
-    const end = performance.now()
-    console.log(`Execution time: ${end - start} ms`)
     return res
   }
 )

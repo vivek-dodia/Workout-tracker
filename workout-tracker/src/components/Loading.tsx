@@ -3,7 +3,7 @@ const Loading = ({ loadingText = "Loading" }: { loadingText?: string }) => {
     <div className="w-full h-screen flex flex-col items-center justify-center">
       <div className="flex gap-4 items-center px-4">
         <img src="/logo.png" className="h-6 w-6" alt="logo" />
-        <h1 className="text-lg font-semibold">FitTrackerX</h1>
+        <h1 className="text-lg font-semibold">Workout Tracker</h1>
       </div>
       <div className="mt-4 flex gap-2">
         <svg

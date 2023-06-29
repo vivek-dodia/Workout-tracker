@@ -19,7 +19,7 @@ describe("Loading component", () => {
   it("renders logo and app name", () => {
     const { getByAltText, getByText } = render(<Loading />)
     const logoImage = getByAltText("logo")
-    const appNameElement = getByText(/FitTrackerX/i)
+    const appNameElement = getByText(/Workout Tracker/i)
     expect(logoImage).toBeInTheDocument()
     expect(appNameElement).toBeInTheDocument()
   })

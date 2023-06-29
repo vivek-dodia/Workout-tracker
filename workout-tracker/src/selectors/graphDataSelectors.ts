@@ -18,8 +18,6 @@ import { selectGrouping, selectIdAndGrouping } from "./commonSelectors"
 export const selectWorkoutGraphData = createSelector(
   [selectWorkoutById],
   (workout) => {
-    const start = performance.now()
-
     let totalVolume = 0
     let totalSets = 0
     const muscleMap = new Map()
@@ -60,8 +58,6 @@ export const selectWorkoutGraphData = createSelector(
       percentSets: ((obj.sets / totalSets) * 100).toFixed(1) + "%",
     }))
 
-    const end = performance.now()
-    console.log(`Execution time: ${end - start} ms`)
     return graphData
   }
 )
@@ -69,8 +65,6 @@ export const selectWorkoutGraphData = createSelector(
 export const selectExerciseGraphData = createSelector(
   [selectSetsWithDataByExerciseId, selectIdAndGrouping],
   (sets: SetWithData[], grouping: Grouping): ExerciseGraphData[] => {
-    const start = performance.now()
-
     const graphDataMap = new Map()
 
     sets.forEach((set) => {
@@ -108,9 +102,6 @@ export const selectExerciseGraphData = createSelector(
       (a, b) => compareAsc(parseISO(a.date), parseISO(b.date))
     )
 
-    const end = performance.now()
-    console.log(`Execution time: ${end - start} ms`)
-
     return graphData
   }
 )
@@ -118,8 +109,6 @@ export const selectExerciseGraphData = createSelector(
 export const selectOverallGraphData = createSelector(
   [selectSetsWithData, selectGrouping],
   (sets: SetWithData[], grouping: Grouping): OverallGraphData[] => {
-    const start = performance.now()
-
     const graphDataMap: Map<string, OverallGraphData> = new Map()
 
     sets.forEach((set) => {
@@ -149,9 +138,6 @@ export const selectOverallGraphData = createSelector(
       (a, b) => compareAsc(parseISO(a.date), parseISO(b.date))
     )
 
-    const end = performance.now()
-    console.log(`Execution time: ${end - start} ms`)
-
     return graphData
   }
 )
@@ -159,8 +145,6 @@ export const selectOverallGraphData = createSelector(
 export const selectWorkoutsGraphData = createSelector(
   [selectWorkouts],
   (workouts: Workout[]) => {
-    const start = performance.now()
-
     const graphDataMap = new Map()
 
     workouts.forEach((workout) => {
@@ -187,9 +171,6 @@ export const selectWorkoutsGraphData = createSelector(
       compareAsc(parseISO(a.date), parseISO(b.date))
     )
 
-    const end = performance.now()
-    console.log(`Execution time: ${end - start} ms`)
-
     return graphData
   }
 )
@@ -197,8 +178,6 @@ export const selectWorkoutsGraphData = createSelector(
 export const selectOverallMusclesGraphData = createSelector(
   [selectWorkouts],
   (workouts: Workout[]) => {
-    const start = performance.now()
-
     let totalVolume = 0
     let totalSets = 0
     const muscleMap = new Map()
@@ -242,8 +221,6 @@ export const selectOverallMusclesGraphData = createSelector(
       percentSets: ((obj.sets / totalSets) * 100).toFixed(1) + "%",
     }))
 
-    const end = performance.now()
-    console.log(`Execution time: ${end - start} ms`)
     return { graphData, totalSets, totalVolume }
   }
 )

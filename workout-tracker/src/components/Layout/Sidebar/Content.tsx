@@ -54,7 +54,7 @@ const Content = () => {
       <header className="h-header flex items-center text-lg font-semibold mx-4 py-4">
         <Link to="/app/dashboard" className="flex gap-4 items-center px-4">
           <img src="/logo.png" className="h-6 w-6" />
-          <h1>FitTrackerX</h1>
+          <h1>Workout Tracker</h1>
         </Link>
       </header>
 
