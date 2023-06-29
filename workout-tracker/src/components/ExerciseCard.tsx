@@ -3,6 +3,7 @@ import * as types from "../types"
 import { CustomChip } from "../pages/Exercises"
 import { ChevronRightIcon } from "@heroicons/react/24/outline"
 import { Link } from "react-router-dom"
+import Tooltip from "./Tooltip"
 
 type ExerciseCardProps = {
   exercise: types.WorkoutExercise
@@ -35,9 +36,12 @@ const ExerciseCard = ({ exercise, user }: ExerciseCardProps) => {
               <p className="text-sm text-gray-600">
                 {exercise._exercise.muscleGroups.join(", ")} |{" "}
                 {exercise.sets.length} sets | Total volume{" "}
-                {+exercise.sets
-                  .map((set) => set.reps * set.actualWeight)
-                  .reduce((a, b) => a + b, 0).toFixed(2)}{" "}
+                {
+                  +exercise.sets
+                    .map((set) => set.reps * set.actualWeight)
+                    .reduce((a, b) => a + b, 0)
+                    .toFixed(2)
+                }{" "}
                 kg
               </p>
             </div>
@@ -58,18 +62,18 @@ const ExerciseCard = ({ exercise, user }: ExerciseCardProps) => {
       <div className="mt-2">
         {/* TABLE HEADER */}
         <div className="flex items-center gap-4">
-          <div className="flex-1 grid grid-cols-12 text-xs font-semibold">
+          <div className="flex-1 grid grid-cols-12 text-xs font-semibold cursor-default">
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-3">
-              Set
+              <Tooltip text="Set number">Set</Tooltip>
             </div>
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-3">
-              Type
+              <Tooltip text="Set type. Warmup or working.">Type</Tooltip>
             </div>
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-3">
-              Reps
+              <Tooltip text="Repetitions per set.">Reps</Tooltip>
             </div>
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-3">
-              Weight
+              <Tooltip text="Weight per rep in kg.">Weight</Tooltip>
             </div>
           </div>
         </div>

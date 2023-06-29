@@ -46,27 +46,29 @@ const Sets = ({
       <div className="mt-2">
         {/* TABLE HEADER */}
         <div className="flex items-center gap-4">
-          <div className="flex-1 grid grid-cols-12 text-xs font-semibold text-gray-600">
+          <div className="flex-1 grid grid-cols-12 text-xs font-semibold text-gray-600 cursor-default">
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-1">
-              Set
+              <Tooltip text="Set number">Set</Tooltip>
             </div>
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-3">
-              Type
+              <Tooltip text="Set type. Warmup or working.">Type</Tooltip>
             </div>
             <div className="items-center justify-center p-1 grid h-12 w-full col-span-3">
-              Previous
+              <Tooltip text="Latest past performance.">Previous</Tooltip>
             </div>
             {exerciseType === types.ExerciseType.repsAndBw ? (
               <div className="items-center justify-center p-1 grid h-12 w-full col-span-4">
-                Reps
+                <Tooltip text="Repetitions per set.">Reps</Tooltip>
               </div>
             ) : (
               <>
                 <div className="items-center justify-center p-1 grid h-12 w-full col-span-2">
-                  Reps
+                  <Tooltip text="Repetitions per set.">Reps</Tooltip>
                 </div>
                 <div className="items-center justify-center p-1 grid h-12 w-full col-span-2">
-                  {exerciseType.split("&")[1]}
+                  <Tooltip text="Weight per rep in kg.">
+                    {exerciseType.split("&")[1]}
+                  </Tooltip>
                 </div>
               </>
             )}

@@ -171,9 +171,6 @@ const Details = ({ workout }: { workout: Workout }) => {
           <div className="flex flex-col mt-8 bg-white px-4 py-6 rounded-lg shadow-md">
             <div className="flex gap-2 items-center mb-4">
               <h2 className="font-semibold">Muscle Split</h2>
-              <Tooltip text="Muscle split by volume">
-                <QuestionMarkCircleIcon className="h-5 w-5" />
-              </Tooltip>
             </div>
             <div>
               <ResponsiveContainer

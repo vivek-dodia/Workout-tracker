@@ -81,7 +81,12 @@ export const DurationAndWorkoutsGraph = ({
 
       {onDashboard && (
         <div className="flex justify-between items-center">
-          <h2 className="font-semibold">Last month grouped by week</h2>
+          <Tooltip text="Grouped by week">
+            <div className="flex items-center gap-2">
+              <h2 className="font-bold text-lg">Last month</h2>
+              <QuestionMarkCircleIcon className="h-5 w-5" />{" "}
+            </div>
+          </Tooltip>
           <LinkButton to="/app/analytics">
             <div className="flex items-center gap-2">
               <h3>Analytics</h3>
@@ -164,9 +169,6 @@ const MusclesGraph = () => {
     <div className="flex flex-col">
       <div className="flex gap-2 items-center mb-4">
         <h2 className="font-semibold">Muscle Split</h2>
-        <Tooltip text="Muscle split by volume">
-          <QuestionMarkCircleIcon className="h-5 w-5" />
-        </Tooltip>
       </div>
       <ResponsiveContainer className="mx-auto" width="100%" height={600}>
         <BarChart
@@ -199,7 +201,9 @@ const MusclesGraph = () => {
             isAnimationActive={false}
             cursor={{ fill: "#e2e8f0" }}
             formatter={(value, _name, props) =>
-              props.dataKey === "volume" ? ((+(value as number).toFixed(2) + " kg") as ValueType) : value
+              props.dataKey === "volume"
+                ? ((+(value as number).toFixed(2) + " kg") as ValueType)
+                : value
             }
           />
           <Legend />
