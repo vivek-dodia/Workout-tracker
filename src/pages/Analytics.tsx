@@ -315,7 +315,15 @@ const OverallGraph = () => {
               tickMargin={10}
             />
             <YAxis type="number" domain={["auto", "auto"]} />
-            <ChartsTooltip />
+            <ChartsTooltip
+              isAnimationActive={false}
+              cursor={{ fill: "#e2e8f0" }}
+              formatter={(value, _name, props) =>
+                props.dataKey === "volume"
+                  ? ((+(value as number).toFixed(2) + " kg") as ValueType)
+                  : value
+              }
+            />
             <Legend wrapperStyle={{ paddingTop: 10 }} />
             <Line
               name={selectedDataKey.label}

@@ -15,6 +15,7 @@ import { useAppDispatch } from "./hooks"
 import { initUser } from "./reducers/userReducer"
 import Loading from "./components/Loading"
 import SignUp from "./pages/SignUp"
+import Home from "./pages/Home"
 
 const PathActions = (): null => {
   const { pathname } = useLocation()
@@ -50,6 +51,7 @@ const App = () => {
       <Router>
         <PathActions />
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/app/*" element={<Layout />} />

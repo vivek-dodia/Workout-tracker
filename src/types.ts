@@ -250,3 +250,9 @@ export interface GroupingOption {
   label: string
   value: Grouping
 }
+
+export interface Statistics {
+  userCount: number
+  workoutCount: number
+  liftCount: number
+}

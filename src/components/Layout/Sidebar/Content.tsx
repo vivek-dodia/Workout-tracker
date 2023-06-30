@@ -105,7 +105,7 @@ const Content = () => {
           ))}
         </nav>
 
-        <div className="mx-4 py-4 flex flex-col justify-between gap-2 px-4 mt-10 border-t items-center">
+        <footer className="mx-4 py-4 flex flex-col justify-between gap-2 px-4 mt-10 border-t items-center">
           <div className="flex gap-4">
             <Link
               to="https://villeprami.vercel.app/"
@@ -146,7 +146,7 @@ const Content = () => {
             </Link>
           </div>
           <h3 className="text-sm text-zinc-600">© 2023 Ville Prami</h3>
-        </div>
+        </footer>
       </div>
     </div>
   )
