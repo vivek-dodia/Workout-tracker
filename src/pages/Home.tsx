@@ -5,7 +5,6 @@ import { ArrowSmallRightIcon, GlobeAltIcon } from "@heroicons/react/24/outline"
 import statisticsService from "../services/statistics"
 import { useEffect, useState } from "react"
 import { Statistics } from "../types"
-import { ArrowSmallLeftIcon } from "@heroicons/react/24/solid"
 
 const LiveNumbers = () => {
   const [stats, setStats] = useState<Statistics | null>(null)
