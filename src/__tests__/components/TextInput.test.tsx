@@ -5,10 +5,10 @@ import TextInput from "../../components/TextInput"
 describe("TextInput component", () => {
   it("renders with a label", () => {
     const label = "Username"
-    const { getByLabelText } = render(<TextInput label={label} />)
-    const inputElement = getByLabelText(label)
+    const { getByText } = render(<TextInput label={label} />)
+    const labelElement = getByText(label)
 
-    expect(inputElement).toBeInTheDocument()
+    expect(labelElement).toBeInTheDocument()
   })
 
   it("renders with a placeholder", () => {

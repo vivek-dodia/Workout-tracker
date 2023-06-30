@@ -18,14 +18,12 @@ const TextInput = ({
   return (
     <div className={className}>
       <label
-        htmlFor="input"
         className={classNames("font-medium leading-6", classNameLabel || "")}
       >
         {label}
       </label>
       <div className="mt-2">
         <input
-          id="input"
           className={classNames(
             "w-full p-2 text-gray-900 placeholder:text-gray-400 sm:leading-6",
             props.disabled ? "opacity-60" : "opacity-100",

@@ -49,7 +49,7 @@ export const WorkoutFinishInputs = ({
         value={
           format(parseISO(workout.date), "yyyy-MM-dd") +
           "T" +
-          format(parseISO(workout.date), "H:mm")
+          format(parseISO(workout.date), "HH:mm")
         }
         onChange={({ target }) => {
           setWorkout({
