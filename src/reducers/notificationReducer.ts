@@ -32,7 +32,7 @@ export const setNotification = (notification: Notification, duration: number = 5
     dispatch(clearMessage())
     clearTimeout(timeoutID)
     dispatch(setMessage(notification))
-    timeoutID = setTimeout(() => {
+    timeoutID = window.setTimeout(() => {
       dispatch(clearMessage())
     }, duration * 1000)
   }

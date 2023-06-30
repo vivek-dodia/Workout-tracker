@@ -29,10 +29,8 @@ import {
 import {
   DocumentDuplicateIcon,
   PencilSquareIcon,
-  QuestionMarkCircleIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline"
-import Tooltip from "../components/Tooltip"
 import { format, parseISO } from "date-fns"
 import { selectWorkoutGraphData } from "../selectors/graphDataSelectors"
 import { ValueType } from "recharts/types/component/DefaultTooltipContent"

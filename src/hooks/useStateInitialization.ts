@@ -12,16 +12,14 @@ const useStateInitialization = () => {
 
   const initializeState = async (): Promise<void> => {
 
-    const start: number = Date.now()
 
-    const exercises = await dispatch(initializeExercises())
+    await dispatch(initializeExercises())
     setLoadingExercises(false)
 
-    const workouts = await dispatch(initializeWorkouts())
+    await dispatch(initializeWorkouts())
     setLoadingWorkouts(false)
 
 
-    //console.log(`Initialization took: ${Date.now() - start}ms`)
   }
 
   return {initializeState, loading, loadingText}

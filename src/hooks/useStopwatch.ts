@@ -6,7 +6,7 @@ const useStopwatch = (startTime: number) => {
   useEffect(() => {
     let interval = -1
 
-    interval = setInterval(() => {
+    interval = window.setInterval(() => {
       setTime(Math.floor(Date.now() - startTime))
     }, 1000)
 
