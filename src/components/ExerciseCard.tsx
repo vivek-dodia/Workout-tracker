@@ -21,8 +21,8 @@ const ExerciseCard = ({ exercise, user }: ExerciseCardProps) => {
         >
           <div className="flex gap-x-4 py-1">
             <div>
-              <div className="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden bg-gray-100 group-hover:bg-blue-500 rounded-full dark:bg-gray-600">
-                <span className="font-medium dark:text-gray-300 group-hover:text-white text-gray-600">
+              <div className="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden bg-gray-100 group-hover:bg-blue-500 rounded-full">
+                <span className="font-medium group-hover:text-white text-gray-600">
                   {exercise._exercise.name[0]}
                 </span>
               </div>

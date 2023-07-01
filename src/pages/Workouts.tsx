@@ -53,8 +53,8 @@ const Workouts = () => {
             <div className="flex flex-col gap-y-4">
               <div className="flex gap-x-4 py-1 items-center">
                 <div>
-                  <div className="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden bg-gray-100 group-hover:bg-blue-500 rounded-full dark:bg-gray-600">
-                    <span className="font-medium text-gray-600 dark:text-gray-300 group-hover:text-white">
+                  <div className="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden bg-gray-100 group-hover:bg-blue-500 rounded-full">
+                    <span className="font-medium text-gray-600 group-hover:text-white">
                       {workout.name[0]}
                     </span>
                   </div>

@@ -47,8 +47,8 @@ const Exercise = ({
         <div className="flex justify-between items-center">
           <div className="flex gap-x-4 py-1">
             <div>
-              <div className="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden bg-blue-500 rounded-full dark:bg-gray-600">
-                <span className="font-medium dark:text-gray-300 text-white">
+              <div className="relative inline-flex items-center justify-center w-12 h-12 overflow-hidden bg-blue-500 rounded-full">
+                <span className="font-medium text-white">
                   {workoutExercise._exercise.name[0]}
                 </span>
               </div>

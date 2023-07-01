@@ -36,7 +36,7 @@ const GoBack = ({ children, to }: GoBackProps) => {
 
 const Title = ({ children }: PageProps) => {
   return (
-    <h1 className="py-8 text-5xl font-bold text-gray-700 dark:text-gray-200">
+    <h1 className="py-8 text-5xl font-bold text-gray-700">
       {children}
     </h1>
   )
@@ -44,7 +44,7 @@ const Title = ({ children }: PageProps) => {
 
 const Subtitle = ({ children }: PageProps) => {
   return (
-    <h3 className="pb-6 text-xl font-semibold text-gray-400 dark:text-gray-200">
+    <h3 className="pb-6 text-xl font-semibold text-gray-400">
       {children}
     </h3>
   )

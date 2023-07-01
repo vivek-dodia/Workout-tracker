@@ -52,13 +52,13 @@ export const ExerciseListItem = ({
         <div>
           <div
             className={classNames(
-              "relative inline-flex items-center justify-center w-12 h-12 overflow-hidden group-hover:bg-blue-500 rounded-full dark:bg-gray-600",
+              "relative inline-flex items-center justify-center w-12 h-12 overflow-hidden group-hover:bg-blue-500 rounded-full",
               isSelected ? "bg-blue-500" : "bg-gray-100"
             )}
           >
             <span
               className={classNames(
-                "font-medium dark:text-gray-300 group-hover:text-white",
+                "font-medium group-hover:text-white",
                 isSelected ? "text-white" : "text-gray-600"
               )}
             >

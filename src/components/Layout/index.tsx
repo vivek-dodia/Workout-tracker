@@ -22,7 +22,7 @@ const Layout = () => {
   if (loading) return <Loading loadingText={loadingText} />
 
   return (
-    <div className={`flex h-screen w-full bg-gray-50 dark:bg-gray-900`}>
+    <div className={`flex h-screen w-full bg-gray-50`}>
       <Sidebar />
       {/* <Confirmation /> */}
       <div className="flex flex-col flex-1">
