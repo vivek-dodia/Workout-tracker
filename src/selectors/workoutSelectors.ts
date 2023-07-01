@@ -15,8 +15,26 @@ export const selectWorkouts = createSelector(
   }
 )
 
+export const selectRecentWorkouts = createSelector(
+  [(state: RootState): Workout[] => state.workouts],
+  (workouts: Workout[]): Workout[] => {
+    return [...workouts]
+      .sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)))
+      .slice(0, 10)
+  }
+)
+
 export const selectWorkoutsByQuery = createSelector(
   [selectWorkouts, selectQuery],
+  (workouts: Workout[], query: string): Workout[] => {
+    return workouts.filter((workout) =>
+      workout.name.toLowerCase().includes(query.toLowerCase())
+    )
+  }
+)
+
+export const selectRecentWorkoutsByQuery = createSelector(
+  [selectRecentWorkouts, selectQuery],
   (workouts: Workout[], query: string): Workout[] => {
     return workouts.filter((workout) =>
       workout.name.toLowerCase().includes(query.toLowerCase())
