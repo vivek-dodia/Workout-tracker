@@ -44,13 +44,13 @@ const Header = () => {
             <Bars3Icon className="w-6 h-6" aria-hidden="true" />
           )}
         </button>
-        <h3 className="font-bold text-2xl">{headerTitle}</h3>
+        <h3 className="font-bold text-lg sm:text-2xl">{headerTitle}</h3>
 
         {/* Profile dropdown */}
         <Menu as="div" className="relative ml-3">
           <div>
             <Menu.Button className="flex items-center rounded-full hover:ring-2 hover:ring-gray-500">
-              <Avatar initials={user?.username[0].toUpperCase() || "AA"} />
+              <Avatar initials={user?.username[0].toUpperCase() || "U"} />
             </Menu.Button>
           </div>
           <Transition

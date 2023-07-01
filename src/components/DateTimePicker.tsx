@@ -27,7 +27,7 @@ const DateTimePicker = ({
           type="datetime-local"
           max={format(now, "yyyy-MM-dd") + "T" + format(now, "HH:mm")}
           className={classNames(
-            "w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:leading-6",
+            "w-full bg-white rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:leading-6",
             props.disabled ? "opacity-60" : "opacity-100"
           )}
           {...props}

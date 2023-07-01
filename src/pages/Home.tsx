@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom"
 import { useAppSelector } from "../hooks"
 import { selectUser } from "../selectors/userSelectors"
-import { ArrowSmallRightIcon, GlobeAltIcon } from "@heroicons/react/24/outline"
+import {
+  ArrowSmallRightIcon,
+  GlobeAltIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline"
 import statisticsService from "../services/statistics"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Fragment } from "react"
 import { Statistics } from "../types"
+import { Popover, Transition } from "@headlessui/react"
 
 const LiveNumbers = () => {
   const [stats, setStats] = useState<Statistics | null>(null)
@@ -67,14 +73,101 @@ const Home = () => {
         <header className="z-50 sticky w-full top-0 bg-white border-b">
           <div className="container mx-auto px-6">
             <div className="flex justify-between items-center gap-4">
-              <Link to="/" className="flex gap-4 items-center p-4">
+              <Link
+                to="/"
+                className="flex gap-2 sm:gap-4 items-center py-4 sm:p-4"
+              >
                 <img src="/logo.png" className="h-6 w-6" />
-                <h1 className="text-xl font-medium text-zinc-800">
+                <h1 className="sm:text-xl font-medium text-zinc-800">
                   Workout Tracker
                 </h1>
               </Link>
 
-              <div className="flex gap-1 font-medium text-sm text-zinc-800 hover:text-zinc-950">
+              <Popover as="div" className="pointer-events-auto sm:hidden">
+                <div className="flex">
+                  <Popover.Button>
+                    <Bars3Icon className="h-6 w-6" />
+                  </Popover.Button>
+                </div>
+
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0"
+                  enterTo="transform opacity-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100"
+                  leaveTo="transform opacity-0"
+                >
+                  <Popover.Overlay className="fixed inset-0 z-50 bg-zinc-800/40 backdrop-blur-sm opacity-100" />
+                </Transition>
+
+                <div>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Popover.Panel className="fixed inset-x-4 top-8 z-50 origin-top rounded-3xl bg-white p-8 ring-1 ring-zinc-900/5 opacity-100 scale-100">
+                      <div className="flex flex-row-reverse items-center justify-between">
+                        <Popover.Button className="-m-1 p-1">
+                          <XMarkIcon className="h-6 w-6 text-zinc-500" />
+                        </Popover.Button>
+                        <h2 className="text-sm font-medium text-zinc-600">
+                          Navigation
+                        </h2>
+                      </div>
+
+                      <nav className="mt-6">
+                        <ul className="-my-2 divide-y divide-zinc-100 text-base text-zinc-800">
+                          {!!user ? (
+                            <>
+                              <li>
+                                <Link
+                                  className="block py-2 transition hover:text-zinc-950"
+                                  to="/app/dashboard"
+                                >
+                                  App
+                                </Link>
+                              </li>
+                              <li>
+                                <p className="block py-2 font-normal text-zinc-600 text-sm">
+                                  Signed in as {user.username}
+                                </p>
+                              </li>
+                            </>
+                          ) : (
+                            <>
+                              <li>
+                                <Link
+                                  className="block py-2 transition hover:text-zinc-950"
+                                  to="/signin"
+                                >
+                                  Sign In
+                                </Link>
+                              </li>
+                              <li>
+                                <Link
+                                  className="block py-2 transition hover:text-zinc-950"
+                                  to="/signup"
+                                >
+                                  Sign Up
+                                </Link>
+                              </li>
+                            </>
+                          )}
+                        </ul>
+                      </nav>
+                    </Popover.Panel>
+                  </Transition>
+                </div>
+              </Popover>
+
+              <div className="gap-1 font-medium text-sm text-zinc-800 hover:text-zinc-950 hidden sm:flex">
                 {!!user ? (
                   <>
                     <Link to="/app/dashboard" className="px-4 py-2">
@@ -104,9 +197,9 @@ const Home = () => {
 
         {/* LANDING */}
         <div className="h-screen">
-          <div className="bg-[url('/gym.jpg')] bg-no-repeat bg-cover bg-center h-3/4 md:h-full">
+          <div className="bg-[url('/gym.jpg')] bg-no-repeat bg-cover bg-center h-full">
             <div className="flex text-center h-full backdrop-brightness-50">
-              <div className="flex-1 flex flex-col items-center justify-center gap-2 container mx-auto px-6 text-white">
+              <div className="flex-1 flex flex-col items-center justify-center container mx-auto px-6 text-white">
                 <h1 className="text-5xl sm:text-8xl md:text-9xl font-bold">
                   Track, Train,
                 </h1>
@@ -114,7 +207,7 @@ const Home = () => {
                   Transform
                 </h1>
 
-                <p className="mt-4 sm:mt-8 text-xl sm:text-2xl md:text-3xl font-medium">
+                <p className="mt-6 sm:mt-10 text-xl sm:text-2xl md:text-3xl font-medium">
                   Maximize your workouts and see real progress.
                 </p>
               </div>
@@ -182,8 +275,8 @@ const Home = () => {
 
         {/* FOOTER */}
         <footer className="">
-          <div className="py-8 container mx-auto flex justify-between gap-2 px-10 items-center">
-            <h3 className="text-sm text-zinc-600">
+          <div className="py-8 container mx-auto flex flex-col sm:flex-row gap-y-4 justify-between gap-2 px-10 items-center">
+            <h3 className="text-sm text-zinc-600 hidden sm:block">
               Copyright © 2023 Ville Prami. All Rights Reserved.
             </h3>
             <div className="flex gap-4">
@@ -225,6 +318,9 @@ const Home = () => {
                 </svg>
               </Link>
             </div>
+            <h3 className="text-sm text-zinc-600 block sm:hidden text-center">
+              Copyright © 2023 Ville Prami. All Rights Reserved.
+            </h3>
           </div>
         </footer>
       </div>
