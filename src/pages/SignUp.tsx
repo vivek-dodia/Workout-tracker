@@ -16,9 +16,9 @@ const SignUp = () => {
   const navigate = useNavigate()
 
   const validationSchema = Yup.object().shape({
-    username: Yup.string().required("Username is required"),
+    username: Yup.string().required("Username is required").min(3, "Username is too short"),
     email: Yup.string().required("Email is required").email("Email is invalid"),
-    password: Yup.string().required("Password is required"),
+    password: Yup.string().required("Password is required").min(5, "Password is too short"),
     passwordConfirmation: Yup.string()
       .required("Password confirmation is required")
       .oneOf([Yup.ref("password"), ""], "Passwords must match"),
