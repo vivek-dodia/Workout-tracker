@@ -26,6 +26,7 @@ const SearchBar = ({
         />
         {!!searchQuery && (
           <XMarkIcon
+            data-testid="x-mark-icon"
             className="h-6 w-6 text-gray-600 cursor-pointer hover:text-gray-400"
             onClick={() => setSearchQuery("")}
           />
