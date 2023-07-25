@@ -20,7 +20,7 @@ export const selectRecentWorkouts = createSelector(
   (workouts: Workout[]): Workout[] => {
     return [...workouts]
       .sort((a, b) => compareDesc(parseISO(a.date), parseISO(b.date)))
-      .slice(0, 10)
+      .slice(0, 5)
   }
 )
 
